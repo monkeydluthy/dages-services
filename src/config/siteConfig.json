@@ -1,0 +1,38 @@
+{
+  "businessName": "Dage's Services",
+  "tagline": "Reliable local service, done right.",
+  "phone": "(555) 000-0000",
+  "email": "hello@example.com",
+  "cta": "Get a free estimate",
+  "hero": {
+    "headline": "Home and property services you can count on.",
+    "subheadline": "Tell us what you need, add a few photos, and we'll follow up fast."
+  },
+  "services": [
+    {
+      "id": "repairs",
+      "name": "Repairs",
+      "description": "Placeholder service — replace with Joe's actual offerings."
+    },
+    {
+      "id": "maintenance",
+      "name": "Maintenance",
+      "description": "Placeholder service — replace with Joe's actual offerings."
+    },
+    {
+      "id": "improvements",
+      "name": "Improvements",
+      "description": "Placeholder service — replace with Joe's actual offerings."
+    }
+  ],
+  "trustItems": [
+    "Licensed & insured",
+    "Local & responsive",
+    "Photo-based estimates"
+  ],
+  "serviceArea": {
+    "headline": "Proudly serving the local area",
+    "description": "Swap these placeholders for the real cities and towns Joe covers.",
+    "areas": ["Your city", "Nearby towns", "Surrounding counties"]
+  }
+}
