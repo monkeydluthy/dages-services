@@ -1,38 +1,115 @@
 {
-  "businessName": "Dage's Services",
-  "tagline": "Reliable local service, done right.",
-  "phone": "(555) 000-0000",
-  "email": "hello@example.com",
-  "cta": "Get a free estimate",
-  "hero": {
-    "headline": "Home and property services you can count on.",
-    "subheadline": "Tell us what you need, add a few photos, and we'll follow up fast."
+  "businessName": "Dages Services, LLC",
+  "phone": "(813) 716-9436",
+  "address": "8206 Turkey Creek Rd, Plant City, FL 33567",
+  "cta": "Get a callback",
+  "callToday": "Call Today",
+  "owner": {
+    "name": "Joseph",
+    "bio": "Family-run crew out of Plant City. Joseph picks up his own phone — no call center, no dispatcher, just him.",
+    "photoSrc": ""
   },
-  "services": [
-    {
-      "id": "repairs",
-      "name": "Repairs",
-      "description": "Placeholder service — replace with Joe's actual offerings."
-    },
-    {
-      "id": "maintenance",
-      "name": "Maintenance",
-      "description": "Placeholder service — replace with Joe's actual offerings."
-    },
-    {
-      "id": "improvements",
-      "name": "Improvements",
-      "description": "Placeholder service — replace with Joe's actual offerings."
-    }
-  ],
+  "hero": {
+    "headline": "Tree work, handled by the guy who answers his own phone.",
+    "subheadline": "Removal, trimming, stump grinding, storm and hazardous work — serving Plant City and the greater Tampa Bay area. Fill out the form and Joseph calls you back, usually within minutes."
+  },
   "trustItems": [
     "Licensed & insured",
-    "Local & responsive",
-    "Photo-based estimates"
+    "Family-run, based in Plant City",
+    "Minutes, not hours"
   ],
-  "serviceArea": {
-    "headline": "Proudly serving the local area",
-    "description": "Swap these placeholders for the real cities and towns Joe covers.",
-    "areas": ["Your city", "Nearby towns", "Surrounding counties"]
-  }
+  "urgencyOptions": [
+    "Emergency — need someone today",
+    "This week",
+    "No rush, just quoting"
+  ],
+  "services": [
+    {
+      "id": "tree-removal",
+      "name": "Tree removal",
+      "description": "Full takedown of trees that are too close, damaged, or in the way.",
+      "icon": "tree"
+    },
+    {
+      "id": "oak-trimming",
+      "name": "Oak trimming",
+      "description": "Shape and thin oaks so they stay healthy and clear of your house.",
+      "icon": "oak"
+    },
+    {
+      "id": "palm-trimming",
+      "name": "Palm trimming",
+      "description": "Clean dead fronds and seed pods before they drop or become a hazard.",
+      "icon": "palm"
+    },
+    {
+      "id": "stump-grinding",
+      "name": "Stump grinding",
+      "description": "Grind stumps below grade so you can use the yard again.",
+      "icon": "stump"
+    },
+    {
+      "id": "storm-cleanup",
+      "name": "Storm cleanup",
+      "description": "Clear fallen trees and debris after Tampa Bay storms.",
+      "icon": "storm"
+    },
+    {
+      "id": "hazardous-removal",
+      "name": "Hazardous removal",
+      "description": "Careful takedown of leaning, split, or near-power-line trees.",
+      "icon": "hazard"
+    },
+    {
+      "id": "crane-removal",
+      "name": "Crane removal",
+      "description": "Tight-access jobs where a crane is the safe way down.",
+      "icon": "crane"
+    },
+    {
+      "id": "lot-clearing",
+      "name": "Lot clearing",
+      "description": "Clear trees and brush so a lot is ready to build or sell.",
+      "icon": "lot"
+    }
+  ],
+  "cities": [
+    "Tampa",
+    "Lutz",
+    "Land O Lakes",
+    "Wesley Chapel",
+    "Odessa",
+    "Plant City",
+    "Lakeland",
+    "Brandon",
+    "Valrico",
+    "Dover",
+    "Seffner",
+    "Thonotosassa",
+    "Zephyrhills",
+    "Mango",
+    "Lithia",
+    "Riverview",
+    "Winter Haven",
+    "Auburndale",
+    "Bartow",
+    "Polk City"
+  ],
+  "citiesPendingReview": [
+    "Plant City",
+    "Lakeland",
+    "Brandon",
+    "Valrico",
+    "Dover",
+    "Seffner",
+    "Thonotosassa",
+    "Zephyrhills",
+    "Mango",
+    "Lithia",
+    "Riverview",
+    "Winter Haven",
+    "Auburndale",
+    "Bartow",
+    "Polk City"
+  ]
 }

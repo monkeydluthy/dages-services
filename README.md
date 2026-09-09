@@ -21,11 +21,11 @@ React Router is pre-wired now so later `/dashboard` or `/admin` routes can attac
 
 ```bash
 npm install
-cp .env.example .env
+cp .env.example .env.local
 npm run dev
 ```
 
-Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env` when the Supabase project is ready.
+Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env.local` (Project Settings → API in Supabase). Use the anon public key only. The service role key must never live in `src/` or any `VITE_` variable — it belongs in Netlify Functions env later.
 
 ## Build
 

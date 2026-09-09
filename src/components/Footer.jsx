@@ -2,17 +2,20 @@ import siteConfig from '../config/siteConfig.json'
 
 function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300">
-      <div className="mx-auto flex max-w-5xl flex-col gap-2 px-4 py-8 sm:flex-row sm:items-center sm:justify-between">
-        <p className="font-medium text-white">{siteConfig.businessName}</p>
-        <p>
-          <a className="hover:text-white" href={`tel:${siteConfig.phone}`}>
+    <footer className="border-t border-brand/20 bg-white text-ink">
+      <div className="mx-auto max-w-5xl px-4 py-8">
+        {/* Text wordmark until a real logo file is provided. */}
+        <p className="mb-3 font-display text-xl font-bold text-brand">Dages Services</p>
+        <p className="text-sm text-ink/80">
+          {siteConfig.businessName}
+          {' · '}
+          {siteConfig.address}
+          {' · '}
+          <a className="hover:text-brand" href={`tel:${siteConfig.phone}`}>
             {siteConfig.phone}
           </a>
           {' · '}
-          <a className="hover:text-white" href={`mailto:${siteConfig.email}`}>
-            {siteConfig.email}
-          </a>
+          {siteConfig.trustItems[0]}
         </p>
       </div>
     </footer>
