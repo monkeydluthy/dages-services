@@ -84,7 +84,7 @@ async function sendOneSignalPush({ appId, apiKey, title, message }) {
   const payload = {
     app_id: appId,
     target_channel: 'push',
-    included_segments: ['Subscribed Users'],
+    include_subscription_ids: ['37d3fe93-850c-4a93-99dd-1f329e30d3af'],
     headings: { en: title },
     contents: { en: message },
   }
