@@ -1,6 +1,7 @@
 import FAQ from '../components/FAQ'
 import FinancingBadge from '../components/FinancingBadge'
 import Footer from '../components/Footer'
+import GoogleReviewsCarousel from '../components/GoogleReviewsCarousel'
 import Hero from '../components/Hero'
 import LeadForm from '../components/LeadForm'
 import OwnerBio from '../components/OwnerBio'
@@ -9,6 +10,7 @@ import ServiceArea from '../components/ServiceArea'
 import ServiceCards from '../components/ServiceCards'
 import TrustBar from '../components/TrustBar'
 import siteConfig from '../config/siteConfig.json'
+import useGoogleReviews from '../hooks/useGoogleReviews'
 
 const iconClass = 'mx-auto h-7 w-7 text-brandTint'
 const areaCities = siteConfig.cities.slice(0, 4).join(', ')
@@ -86,16 +88,19 @@ function InfoCard({ icon, label, value, subtext, href }) {
 }
 
 function LandingPage() {
+  const reviews = useGoogleReviews()
+
   return (
     <main>
       <Hero />
-      <TrustBar />
+      <TrustBar reviews={reviews} />
       <ServiceCards />
       <FinancingBadge />
       <ServiceArea />
       <FAQ />
       <PortfolioGallery />
       <OwnerBio />
+      <GoogleReviewsCarousel data={reviews} />
       <section className="bg-brand px-4 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="mx-auto mb-10 max-w-3xl text-center text-2xl font-bold text-white sm:text-3xl">

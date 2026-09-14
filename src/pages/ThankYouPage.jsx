@@ -1,20 +1,32 @@
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import CustomerPhotoUpload from '../components/CustomerPhotoUpload'
 import Footer from '../components/Footer'
 import siteConfig from '../config/siteConfig.json'
 
 function ThankYouPage() {
+  const [searchParams] = useSearchParams()
+  const leadId = searchParams.get('lead_id') ?? ''
+
   return (
     <main className="flex min-h-screen flex-col">
-      <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-4 py-16 text-center">
-        <h1 className="mb-4 text-4xl font-bold text-ink">Thanks — we got it.</h1>
-        <p className="mb-8 text-lg text-ink/70">
-          {siteConfig.businessName} will follow up shortly. If it&apos;s urgent, call{' '}
-          <a className="font-medium text-brand underline" href={`tel:${siteConfig.phone}`}>
+      <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-start px-4 pb-24 pt-10 text-center md:pt-16">
+        <h1 className="mb-3 text-3xl font-bold text-ink sm:text-4xl">Thanks — we got it.</h1>
+        <p className="mb-3 text-base text-ink/70 sm:text-lg">
+          Got it — Joseph will call you back shortly. If you&apos;ve got a photo of
+          the job, drop it below so he can see what he&apos;s working with before he
+          calls.
+        </p>
+        <p className="mb-2 text-ink/80">
+          Need him sooner? Call{' '}
+          <a
+            className="font-semibold text-brand underline"
+            href={`tel:${siteConfig.phone}`}
+          >
             {siteConfig.phone}
           </a>
-          .
         </p>
-        <div>
+        <CustomerPhotoUpload leadId={leadId} />
+        <div className="mt-8">
           <Link
             to="/"
             className="inline-flex rounded-md bg-brand px-5 py-3 font-semibold text-brandTint hover:opacity-90"

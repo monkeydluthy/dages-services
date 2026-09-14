@@ -102,6 +102,11 @@
     "Polk",
     "Pasco"
   ],
+  "google": {
+    "placeId": "ChIJRw7C8K0z3YgRnjTrItZ1M2g",
+    "writeReviewUrl": "https://search.google.com/local/writereview?placeid=ChIJRw7C8K0z3YgRnjTrItZ1M2g",
+    "reviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJRw7C8K0z3YgRnjTrItZ1M2g"
+  },
   "financing": {
     "label": "Financing available through GreenSky",
     "placeholderLabel": "Financing available — ask about GreenSky",

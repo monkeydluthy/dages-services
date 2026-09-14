@@ -28,3 +28,30 @@ create policy "authenticated read leads"
 drop policy if exists "authenticated update leads" on leads;
 create policy "authenticated update leads"
   on leads for update to authenticated using (true);
+
+-- Customers on /thank-you are anonymous and must not SELECT or UPDATE leads
+-- (that would leak PII or let anyone change status). This RPC only appends
+-- photo URLs for the lead id they already have from the thank-you URL.
+create or replace function public.append_lead_photos(lead_id uuid, urls text[])
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if urls is null or cardinality(urls) = 0 then
+    return;
+  end if;
+
+  update public.leads
+  set photo_urls = coalesce(photo_urls, '{}'::text[]) || urls
+  where id = lead_id;
+
+  if not found then
+    raise exception 'lead not found';
+  end if;
+end;
+$$;
+
+revoke all on function public.append_lead_photos(uuid, text[]) from public;
+grant execute on function public.append_lead_photos(uuid, text[]) to anon, authenticated;

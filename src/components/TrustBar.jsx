@@ -1,17 +1,28 @@
+import GoogleReviewBadge from './GoogleReviewBadge'
 import siteConfig from '../config/siteConfig.json'
 
-function TrustBar() {
+function TrustBar({ reviews }) {
+  const showBadge = Boolean(reviews?.rating && reviews?.userRatingsTotal)
+
   return (
     <section className="border-b border-brand/20 bg-brandTint">
-      <ul className="mx-auto grid max-w-5xl gap-4 px-4 py-6 sm:grid-cols-3">
+      <ul
+        className={`mx-auto grid max-w-5xl gap-4 px-4 py-6 ${
+          showBadge ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
+        }`}
+      >
         {siteConfig.trustItems.map((item) => (
-          <li
-            key={item}
-            className="text-center text-sm font-medium text-ink"
-          >
+          <li key={item} className="text-center text-sm font-medium text-ink">
             {item}
           </li>
         ))}
+        {showBadge ? (
+          <GoogleReviewBadge
+            rating={reviews.rating}
+            userRatingsTotal={reviews.userRatingsTotal}
+            href={reviews.reviewsUrl}
+          />
+        ) : null}
       </ul>
     </section>
   )
