@@ -1,27 +1,26 @@
 import siteConfig from '../config/siteConfig.json'
 
 function OwnerBio() {
-  const { name, bio, photoSrc } = siteConfig.owner
-  // Swap siteConfig.owner.photoSrc to the headshot path when it lands.
+  const { name, bio, photoSrc, photoCaption } = siteConfig.owner
 
   return (
     <section className="bg-white">
-      <div className="mx-auto flex max-w-5xl items-center gap-4 px-4 py-8 sm:gap-5 sm:py-10">
+      <div className="mx-auto flex max-w-5xl flex-col gap-5 px-4 py-10 md:flex-row md:items-start md:gap-8 md:py-12">
         {photoSrc ? (
-          <img
-            src={photoSrc}
-            alt={name}
-            className="h-16 w-16 shrink-0 rounded-full object-cover sm:h-20 sm:w-20"
-          />
-        ) : (
-          <div
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand text-2xl font-bold text-white sm:h-20 sm:w-20 sm:text-3xl"
-            aria-hidden="true"
-          >
-            J
-          </div>
-        )}
-        <p className="text-base text-ink sm:text-lg">{bio}</p>
+          <figure className="w-full shrink-0 md:max-w-sm">
+            <img
+              src={photoSrc}
+              alt={photoCaption || name}
+              className="h-auto w-full rounded-lg object-cover object-center"
+            />
+            {photoCaption ? (
+              <figcaption className="mt-2 text-center text-sm text-ink/60 md:text-left">
+                {photoCaption}
+              </figcaption>
+            ) : null}
+          </figure>
+        ) : null}
+        <p className="text-base leading-relaxed text-ink sm:text-lg">{bio}</p>
       </div>
     </section>
   )

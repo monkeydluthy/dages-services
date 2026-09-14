@@ -16,7 +16,7 @@ function Icon({ name }) {
           />
         </svg>
       )
-    case 'oak':
+    case 'trim':
       return (
         <svg className={iconClass} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
@@ -28,11 +28,11 @@ function Icon({ name }) {
           />
         </svg>
       )
-    case 'palm':
+    case 'deadwood':
       return (
         <svg className={iconClass} viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path
-            d="M12 22V10M12 10c2.5-4 7-5 9-5-1 3-4 5-9 5Zm0 0C9.5 6 5 5 3 5c1 3 4 5 9 5Zm0 0c0-4 2-7 5-8"
+            d="M12 21V10M8 21h8M12 10 8 6M12 10l5-3M9 13l-3-1M15 14l3-2"
             stroke="currentColor"
             strokeWidth="1.75"
             strokeLinecap="round"

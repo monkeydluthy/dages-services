@@ -11,7 +11,7 @@ function Header() {
         </Link>
         <a
           href={`tel:${siteConfig.phone}`}
-          className="hidden rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:opacity-90 md:inline-flex"
+          className="hidden rounded-md bg-brand px-4 py-2 text-sm font-semibold text-brandTint hover:opacity-90 md:inline-flex"
         >
           {siteConfig.phone}
         </a>

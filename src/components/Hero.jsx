@@ -24,7 +24,9 @@ function Hero() {
             </a>
           </div>
         </div>
-        <LeadForm embedded id="hero-lead-form" />
+        <div className="w-full md:justify-self-end">
+          <LeadForm id="hero-lead-form" />
+        </div>
       </div>
     </section>
   )

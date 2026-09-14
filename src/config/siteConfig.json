@@ -5,9 +5,10 @@
   "cta": "Get a callback",
   "callToday": "Call Today",
   "owner": {
-    "name": "Joseph",
-    "bio": "Family-run crew out of Plant City. Joseph picks up his own phone — no call center, no dispatcher, just him.",
-    "photoSrc": ""
+    "name": "Joseph Dages",
+    "photoCaption": "Joseph, with family.",
+    "bio": "Joseph Dages has been climbing trees across the Tampa Bay area for over 25 years — long enough to know which cuts save a tree and which storms actually call for a crane instead of a chainsaw. Dages Services is family-run, based right here in Plant City, serving Hillsborough, Pinellas, Manatee, Polk, and Pasco counties. Licensed and insured, and when you call, you're talking to Joseph — not a call center, not a dispatcher, just the guy who's going to show up and do the work.",
+    "photoSrc": "/owner-family.jpg"
   },
   "hero": {
     "headline": "Tree work, handled by the guy who answers his own phone.",
@@ -31,22 +32,22 @@
       "icon": "tree"
     },
     {
-      "id": "oak-trimming",
-      "name": "Oak trimming",
-      "description": "Shape and thin oaks so they stay healthy and clear of your house.",
-      "icon": "oak"
-    },
-    {
-      "id": "palm-trimming",
-      "name": "Palm trimming",
-      "description": "Clean dead fronds and seed pods before they drop or become a hazard.",
-      "icon": "palm"
+      "id": "tree-trimming",
+      "name": "Tree trimming",
+      "description": "Shape and thin trees so they stay healthy and clear of your house.",
+      "icon": "trim"
     },
     {
       "id": "stump-grinding",
       "name": "Stump grinding",
       "description": "Grind stumps below grade so you can use the yard again.",
       "icon": "stump"
+    },
+    {
+      "id": "deadwooding",
+      "name": "Deadwooding",
+      "description": "Cut out dead limbs before they fall and damage property or become a hazard.",
+      "icon": "deadwood"
     },
     {
       "id": "storm-cleanup",
@@ -95,21 +96,18 @@
     "Bartow",
     "Polk City"
   ],
-  "citiesPendingReview": [
-    "Plant City",
-    "Lakeland",
-    "Brandon",
-    "Valrico",
-    "Dover",
-    "Seffner",
-    "Thonotosassa",
-    "Zephyrhills",
-    "Mango",
-    "Lithia",
-    "Riverview",
-    "Winter Haven",
-    "Auburndale",
-    "Bartow",
-    "Polk City"
-  ]
+  "counties": [
+    "Pinellas",
+    "Manatee",
+    "Polk",
+    "Pasco"
+  ],
+  "financing": {
+    "label": "Financing available through GreenSky",
+    "placeholderLabel": "Financing available — ask about GreenSky",
+    "applyUrl": "https://www.greensky.com/",
+    "disclosureUrl": "https://www.greensky.com/disclosures",
+    "greenSkyLogoSrc": "/financing/greensky-logo.png",
+    "ehlLogoSrc": "/financing/ehl-logo.png"
+  }
 }

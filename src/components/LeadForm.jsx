@@ -8,7 +8,7 @@ const EMERGENCY_JOBS = new Set(['Storm cleanup', 'Hazardous removal'])
 
 const fieldClass = 'w-full rounded-md border border-brand/30 px-3 py-2.5 text-ink'
 
-function LeadForm({ embedded = false, id = 'lead-form', plain = false }) {
+function LeadForm({ id = 'lead-form' }) {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -58,21 +58,8 @@ function LeadForm({ embedded = false, id = 'lead-form', plain = false }) {
   }
 
   return (
-    <section
-      id={id}
-      className={
-        embedded
-          ? 'w-full md:max-w-md md:justify-self-end'
-          : 'w-full'
-      }
-    >
-      <div
-        className={
-          plain
-            ? 'w-full'
-            : 'rounded-lg border border-brand/20 bg-white p-4 shadow-sm md:px-6 md:py-5'
-        }
-      >
+    <section id={id} className="w-full">
+      <div className="rounded-lg border border-brand/20 bg-white p-4 shadow-sm md:px-6 md:py-5">
         <h2 className="mb-2 text-xl font-bold text-ink sm:text-2xl">{siteConfig.cta}</h2>
         <p className="mb-4 text-sm text-ink/70 sm:mb-6 md:mb-4">
           No self-serve booking — tell us the job and how soon you need it. Joseph
