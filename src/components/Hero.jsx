@@ -1,10 +1,49 @@
+import { useEffect, useState } from 'react'
 import LeadForm from './LeadForm'
 import siteConfig from '../config/siteConfig.json'
+import heroPoster from '../assets/img/hero-poster.jpg'
+import heroVideo from '../assets/video/hero-bg.mp4'
+
+function useMdUp() {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 768px)')
+    const update = () => setMatches(media.matches)
+    update()
+    media.addEventListener('change', update)
+    return () => media.removeEventListener('change', update)
+  }, [])
+
+  return matches
+}
 
 function Hero() {
+  const showVideo = useMdUp()
+
   return (
-    <section className="bg-brand text-brandTint">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-2 md:items-center md:gap-20 md:py-16">
+    <section className="relative overflow-hidden text-brandTint">
+      {showVideo ? (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={heroPoster}
+          className="absolute inset-0 h-full w-full object-cover"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+      ) : (
+        <img
+          src={heroPoster}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+          aria-hidden="true"
+        />
+      )}
+      <div className="absolute inset-0 bg-brand/80" aria-hidden="true" />
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-2 md:items-center md:gap-20 md:py-16">
         <div className="flex flex-col gap-5">
           <p className="text-sm font-semibold uppercase tracking-wide text-brandTint">
             {siteConfig.businessName}
