@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import OneSignal from 'react-onesignal'
 import AdminManage from '../components/AdminManage'
 import AdminUpload from '../components/AdminUpload'
@@ -8,7 +8,10 @@ import { supabase } from '../lib/supabaseClient'
 
 function AdminDashboard() {
   const navigate = useNavigate()
-  const [view, setView] = useState('leads')
+  const [searchParams] = useSearchParams()
+  const [view, setView] = useState(
+    searchParams.get('view') === 'portfolio' ? 'portfolio' : 'leads',
+  )
   const [listVersion, setListVersion] = useState(0)
 
   useEffect(() => {

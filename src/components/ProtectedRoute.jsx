@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 
 function ProtectedRoute({ children }) {
+  const location = useLocation()
   const [session, setSession] = useState(undefined)
 
   useEffect(() => {
@@ -33,7 +34,13 @@ function ProtectedRoute({ children }) {
   }
 
   if (!session) {
-    return <Navigate to="/admin/login" replace />
+    const next = `${location.pathname}${location.search}`
+    return (
+      <Navigate
+        to={`/admin/login?next=${encodeURIComponent(next)}`}
+        replace
+      />
+    )
   }
 
   return children

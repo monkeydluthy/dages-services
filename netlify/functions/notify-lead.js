@@ -83,11 +83,17 @@ function maskAuthHeader(header) {
   return `${prefix}${header.slice(prefix.length, prefix.length + 8)}…`
 }
 
+function leadAlertUrl() {
+  const base = (process.env.SITE_URL || '').replace(/\/$/, '')
+  if (!base) throw new Error('SITE_URL is not set')
+  return `${base}/admin?view=leads`
+}
+
 async function sendOneSignalPush({ appId, apiKey, title, message }) {
   if (!apiKey) throw new Error('ONESIGNAL_API_KEY is not set')
   if (!appId) throw new Error('ONESIGNAL_APP_ID is not set')
 
-  const url = 'https://api.onesignal.com/notifications'
+  const onesignalUrl = 'https://api.onesignal.com/notifications'
   const headers = {
     Authorization: oneSignalAuthHeader(apiKey),
     'Content-Type': 'application/json',
@@ -98,6 +104,7 @@ async function sendOneSignalPush({ appId, apiKey, title, message }) {
     include_aliases: { external_id: oneSignalExternalIds() },
     headings: { en: title },
     contents: { en: message },
+    url: leadAlertUrl(),
   }
 
   if (!payload.include_aliases.external_id.length) {
@@ -105,7 +112,7 @@ async function sendOneSignalPush({ appId, apiKey, title, message }) {
   }
 
   console.log('OneSignal request:', {
-    url,
+    url: onesignalUrl,
     headers: {
       Authorization: maskAuthHeader(headers.Authorization),
       'Content-Type': headers['Content-Type'],
@@ -113,7 +120,7 @@ async function sendOneSignalPush({ appId, apiKey, title, message }) {
     body: payload,
   })
 
-  const response = await fetch(url, {
+  const response = await fetch(onesignalUrl, {
     method: 'POST',
     headers,
     body: JSON.stringify(payload),

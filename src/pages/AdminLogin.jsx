@@ -1,11 +1,20 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient'
 
 const fieldClass = 'w-full rounded-md border border-brand/30 px-3 py-2.5 text-ink'
 
+function safeAdminPath(value) {
+  if (!value || !value.startsWith('/admin') || value.startsWith('//')) {
+    return '/admin?view=leads'
+  }
+  return value
+}
+
 function AdminLogin() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const afterLogin = safeAdminPath(searchParams.get('next'))
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -13,9 +22,9 @@ function AdminLogin() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
-      if (data.session) navigate('/admin', { replace: true })
+      if (data.session) navigate(afterLogin, { replace: true })
     })
-  }, [navigate])
+  }, [afterLogin, navigate])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -34,7 +43,7 @@ function AdminLogin() {
       return
     }
 
-    navigate('/admin', { replace: true })
+    navigate(afterLogin, { replace: true })
   }
 
   return (
