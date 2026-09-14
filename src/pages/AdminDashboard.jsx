@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import OneSignal from 'react-onesignal'
 import AdminManage from '../components/AdminManage'
 import AdminUpload from '../components/AdminUpload'
+import LeadsTable from '../components/LeadsTable'
 import { supabase } from '../lib/supabaseClient'
 
 function AdminDashboard() {
   const navigate = useNavigate()
+  const [view, setView] = useState('leads')
   const [listVersion, setListVersion] = useState(0)
 
   useEffect(() => {
@@ -35,8 +37,8 @@ function AdminDashboard() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-4 py-16">
-      <div className="mb-8 flex items-center justify-between gap-4">
+    <main className="mx-auto max-w-6xl px-4 py-16">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold text-ink">Admin</h1>
         <button
           type="button"
@@ -46,10 +48,38 @@ function AdminDashboard() {
           Log out
         </button>
       </div>
-      <div className="grid gap-8">
-        <AdminUpload onUploaded={() => setListVersion((version) => version + 1)} />
-        <AdminManage refreshKey={listVersion} />
+      <div className="mb-6 flex gap-2">
+        <button
+          type="button"
+          onClick={() => setView('leads')}
+          className={`rounded-md px-4 py-2 text-sm font-semibold ${
+            view === 'leads'
+              ? 'bg-brand text-brandTint'
+              : 'border border-brand/30 bg-white text-ink hover:bg-brandTint'
+          }`}
+        >
+          Leads
+        </button>
+        <button
+          type="button"
+          onClick={() => setView('portfolio')}
+          className={`rounded-md px-4 py-2 text-sm font-semibold ${
+            view === 'portfolio'
+              ? 'bg-brand text-brandTint'
+              : 'border border-brand/30 bg-white text-ink hover:bg-brandTint'
+          }`}
+        >
+          Portfolio
+        </button>
       </div>
+      {view === 'leads' ? (
+        <LeadsTable />
+      ) : (
+        <div className="grid gap-8">
+          <AdminUpload onUploaded={() => setListVersion((version) => version + 1)} />
+          <AdminManage refreshKey={listVersion} />
+        </div>
+      )}
     </main>
   )
 }

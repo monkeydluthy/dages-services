@@ -20,3 +20,11 @@ alter table leads enable row level security;
 
 create policy "public insert only"
   on leads for insert to anon with check (true);
+
+drop policy if exists "authenticated read leads" on leads;
+create policy "authenticated read leads"
+  on leads for select to authenticated using (true);
+
+drop policy if exists "authenticated update leads" on leads;
+create policy "authenticated update leads"
+  on leads for update to authenticated using (true);
