@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
-import OneSignal from 'react-onesignal'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
 import StickyCallButton from './components/StickyCallButton'
@@ -37,10 +35,6 @@ function AppShell() {
 }
 
 function App() {
-  useEffect(() => {
-    OneSignal.init({ appId: import.meta.env.VITE_ONESIGNAL_APP_ID })
-  }, [])
-
   return (
     <BrowserRouter>
       <AppShell />

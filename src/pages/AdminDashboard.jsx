@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import OneSignal from 'react-onesignal'
 import AdminManage from '../components/AdminManage'
 import AdminUpload from '../components/AdminUpload'
 import { supabase } from '../lib/supabaseClient'
@@ -7,6 +8,10 @@ import { supabase } from '../lib/supabaseClient'
 function AdminDashboard() {
   const navigate = useNavigate()
   const [listVersion, setListVersion] = useState(0)
+
+  useEffect(() => {
+    OneSignal.init({ appId: import.meta.env.VITE_ONESIGNAL_APP_ID })
+  }, [])
 
   async function handleLogout() {
     await supabase.auth.signOut()
