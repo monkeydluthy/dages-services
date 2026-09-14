@@ -59,28 +59,71 @@ async function sendResendEmail({ to, from, subject, text }) {
   }
 }
 
+function oneSignalAuthHeader(apiKey) {
+  const raw = String(apiKey).replace(/^(Key|Bearer)\s+/i, '').trim()
+  return `Key ${raw}`
+}
+
+function maskAuthHeader(header) {
+  const prefix = 'Key '
+  if (!header.startsWith(prefix) || header.length <= prefix.length + 8) {
+    return 'Key ***'
+  }
+  return `${prefix}${header.slice(prefix.length, prefix.length + 8)}…`
+}
+
 async function sendOneSignalPush({ appId, apiKey, title, message }) {
   if (!apiKey) throw new Error('ONESIGNAL_API_KEY is not set')
   if (!appId) throw new Error('ONESIGNAL_APP_ID is not set')
 
-  const response = await fetch('https://api.onesignal.com/notifications', {
-    method: 'POST',
+  const url = 'https://api.onesignal.com/notifications'
+  const headers = {
+    Authorization: oneSignalAuthHeader(apiKey),
+    'Content-Type': 'application/json',
+  }
+  const payload = {
+    app_id: appId,
+    target_channel: 'push',
+    included_segments: ['Subscribed Users'],
+    headings: { en: title },
+    contents: { en: message },
+  }
+
+  console.log('OneSignal request:', {
+    url,
     headers: {
-      Authorization: `Key ${apiKey}`,
-      'Content-Type': 'application/json',
+      Authorization: maskAuthHeader(headers.Authorization),
+      'Content-Type': headers['Content-Type'],
     },
-    body: JSON.stringify({
-      app_id: appId,
-      target_channel: 'push',
-      included_segments: ['Subscribed Users'],
-      headings: { en: title },
-      contents: { en: message },
-    }),
+    body: payload,
+  })
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(payload),
+  })
+
+  const raw = await response.text()
+  console.log('OneSignal response:', {
+    status: response.status,
+    ok: response.ok,
+    body: raw,
   })
 
   if (!response.ok) {
-    const detail = await response.text()
-    throw new Error(`OneSignal ${response.status}: ${detail}`)
+    throw new Error(`OneSignal ${response.status}: ${raw}`)
+  }
+
+  let parsed
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    parsed = null
+  }
+
+  if (parsed?.errors) {
+    throw new Error(`OneSignal ${response.status}: ${raw}`)
   }
 }
 
@@ -114,12 +157,21 @@ Notes: ${lead.notes || '(none)'}`
       text: emailText,
     }),
     sendOneSignalPush({
-      appId: process.env.ONESIGNAL_APP_ID,
+      appId: process.env.ONESIGNAL_APP_ID || process.env.VITE_ONESIGNAL_APP_ID,
       apiKey: process.env.ONESIGNAL_API_KEY,
       title: subjectPrefix,
       message: `${lead.name} – ${lead.job_type} (${lead.phone})`,
     }),
   ])
+
+  console.log(
+    'Notify settled:',
+    results.map((result, index) => ({
+      channel: index === 0 ? 'resend' : 'onesignal',
+      status: result.status,
+      reason: result.status === 'rejected' ? result.reason?.message || String(result.reason) : undefined,
+    })),
+  )
 
   const failed = results.filter((result) => result.status === 'rejected')
   if (failed.length) {
