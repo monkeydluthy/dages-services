@@ -59,6 +59,17 @@ async function sendResendEmail({ to, from, subject, text }) {
   }
 }
 
+function oneSignalExternalIds() {
+  const fromList = (process.env.ONESIGNAL_EXTERNAL_IDS || '')
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean)
+  if (fromList.length) return fromList
+
+  const fallback = (process.env.LEAD_ALERT_EMAIL_TO || '').trim()
+  return fallback ? [fallback] : []
+}
+
 function oneSignalAuthHeader(apiKey) {
   const raw = String(apiKey).replace(/^(Key|Bearer)\s+/i, '').trim()
   return `Key ${raw}`
@@ -84,9 +95,13 @@ async function sendOneSignalPush({ appId, apiKey, title, message }) {
   const payload = {
     app_id: appId,
     target_channel: 'push',
-    include_subscription_ids: ['37d3fe93-850c-4a93-99dd-1f329e30d3af'],
+    include_aliases: { external_id: oneSignalExternalIds() },
     headings: { en: title },
     contents: { en: message },
+  }
+
+  if (!payload.include_aliases.external_id.length) {
+    throw new Error('ONESIGNAL_EXTERNAL_IDS is not set')
   }
 
   console.log('OneSignal request:', {

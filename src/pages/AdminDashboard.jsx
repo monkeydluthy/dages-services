@@ -10,10 +10,26 @@ function AdminDashboard() {
   const [listVersion, setListVersion] = useState(0)
 
   useEffect(() => {
-    OneSignal.init({ appId: import.meta.env.VITE_ONESIGNAL_APP_ID })
+    let cancelled = false
+
+    async function start() {
+      await OneSignal.init({ appId: import.meta.env.VITE_ONESIGNAL_APP_ID })
+      if (cancelled) return
+
+      const { data } = await supabase.auth.getSession()
+      const email = data.session?.user?.email
+      if (email) await OneSignal.login(email)
+    }
+
+    start()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   async function handleLogout() {
+    await OneSignal.logout()
     await supabase.auth.signOut()
     navigate('/admin/login', { replace: true })
   }
