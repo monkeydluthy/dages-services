@@ -1,16 +1,134 @@
-export async function handler(event) {
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ error: 'Method not allowed' }),
-    }
+import { timingSafeEqual } from 'node:crypto'
+
+function json(statusCode, body) {
+  return {
+    statusCode,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  }
+}
+
+function getHeader(event, name) {
+  const headers = event.headers ?? {}
+  const needle = name.toLowerCase()
+  const match = Object.entries(headers).find(([key]) => key.toLowerCase() === needle)
+  const value = match?.[1]
+  return Array.isArray(value) ? value[0] : value
+}
+
+function secretsMatch(provided, expected) {
+  if (!provided || !expected) return false
+  const a = Buffer.from(provided)
+  const b = Buffer.from(expected)
+  if (a.length !== b.length) return false
+  return timingSafeEqual(a, b)
+}
+
+function parseLead(event) {
+  const raw = event.isBase64Encoded
+    ? Buffer.from(event.body ?? '', 'base64').toString('utf8')
+    : event.body
+
+  const payload = typeof raw === 'string' ? JSON.parse(raw) : raw
+  const lead = payload?.record
+
+  if (!lead || typeof lead !== 'object') {
+    throw new Error('missing record')
   }
 
-  // Scaffold stub: later this will notify Joe when a new lead lands in Supabase.
-  return {
-    statusCode: 200,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ok: true, message: 'Lead notification stub' }),
+  return lead
+}
+
+async function sendResendEmail({ to, from, subject, text }) {
+  if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY is not set')
+  if (!from) throw new Error('RESEND_FROM_EMAIL is not set')
+  if (!to) throw new Error('LEAD_ALERT_EMAIL_TO is not set')
+
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ from, to: [to], subject, text }),
+  })
+
+  if (!response.ok) {
+    const detail = await response.text()
+    throw new Error(`Resend ${response.status}: ${detail}`)
   }
+}
+
+async function sendOneSignalPush({ appId, apiKey, title, message }) {
+  if (!apiKey) throw new Error('ONESIGNAL_API_KEY is not set')
+  if (!appId) throw new Error('ONESIGNAL_APP_ID is not set')
+
+  const response = await fetch('https://api.onesignal.com/notifications', {
+    method: 'POST',
+    headers: {
+      Authorization: `Key ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      app_id: appId,
+      target_channel: 'push',
+      included_segments: ['Subscribed Users'],
+      headings: { en: title },
+      contents: { en: message },
+    }),
+  })
+
+  if (!response.ok) {
+    const detail = await response.text()
+    throw new Error(`OneSignal ${response.status}: ${detail}`)
+  }
+}
+
+export async function handler(event) {
+  if (event.httpMethod !== 'POST') {
+    return json(405, { error: 'Method not allowed' })
+  }
+
+  if (!secretsMatch(getHeader(event, 'x-webhook-secret'), process.env.WEBHOOK_SECRET)) {
+    return json(401, { error: 'Unauthorized' })
+  }
+
+  let lead
+  try {
+    lead = parseLead(event)
+  } catch {
+    return json(400, { error: 'Bad payload' })
+  }
+
+  const subjectPrefix = lead.is_emergency ? '🚨 EMERGENCY LEAD' : 'New lead'
+  const emailText = `${lead.name} – ${lead.phone} – ${lead.email}
+Job: ${lead.job_type}
+Urgency: ${lead.urgency}
+Notes: ${lead.notes || '(none)'}`
+
+  const results = await Promise.allSettled([
+    sendResendEmail({
+      to: process.env.LEAD_ALERT_EMAIL_TO,
+      from: process.env.RESEND_FROM_EMAIL,
+      subject: `${subjectPrefix}: ${lead.name} – ${lead.job_type}`,
+      text: emailText,
+    }),
+    sendOneSignalPush({
+      appId: process.env.ONESIGNAL_APP_ID,
+      apiKey: process.env.ONESIGNAL_API_KEY,
+      title: subjectPrefix,
+      message: `${lead.name} – ${lead.job_type} (${lead.phone})`,
+    }),
+  ])
+
+  const failed = results.filter((result) => result.status === 'rejected')
+  if (failed.length) {
+    console.error(
+      'Notify partial failure:',
+      failed.map((result) => result.reason?.message || result.reason),
+    )
+  }
+
+  // Still 200 — Supabase shouldn't retry-storm on a partial notify failure.
+  return json(200, { ok: true })
 }
