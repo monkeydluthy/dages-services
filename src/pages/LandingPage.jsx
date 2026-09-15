@@ -94,13 +94,13 @@ function LandingPage() {
     <main>
       <Hero />
       <TrustBar reviews={reviews} />
+      <GoogleReviewsCarousel data={reviews} />
       <ServiceCards />
       <FinancingBadge />
       <ServiceArea />
       <FAQ />
       <PortfolioGallery />
       <OwnerBio />
-      <GoogleReviewsCarousel data={reviews} />
       <section className="bg-brand px-4 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="mx-auto mb-10 max-w-3xl text-center text-2xl font-bold text-white sm:text-3xl">

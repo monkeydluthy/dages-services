@@ -72,7 +72,7 @@ function GoogleReviewsCarousel({ data }) {
   const stepPercent = 100 / visible
 
   return (
-    <section className="border-t border-brand/20 bg-brandTint px-4 py-12 sm:py-16">
+    <section className="border-b border-brand/20 bg-brandTint px-4 py-12 sm:py-16">
       <div className="mx-auto max-w-5xl text-center">
         <h2 className="text-2xl font-bold text-ink sm:text-3xl">
           What Our Customers Say
