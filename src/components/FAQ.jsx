@@ -33,7 +33,7 @@ const questions = [
   {
     id: 'areas',
     question: 'What areas do you serve?',
-    answer: `Yes. ${formatList(siteConfig.counties)} counties — including ${formatList(siteConfig.cities)}.`,
+    answer: `${formatList(siteConfig.counties)} counties — including ${formatList(siteConfig.cities)}.`,
   },
 ]
 
