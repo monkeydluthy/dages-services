@@ -7,6 +7,12 @@ import {
   webhookAuthorized,
 } from '../lib/notify.js'
 
+function photosBelongToLead(lead, urls) {
+  if (!lead || !Array.isArray(urls) || urls.length === 0) return false
+  const have = new Set(lead.photo_urls || [])
+  return urls.every((url) => typeof url === 'string' && url.length > 0 && have.has(url))
+}
+
 function parseBody(event) {
   const raw = event.isBase64Encoded
     ? Buffer.from(event.body ?? '', 'base64').toString('utf8')
@@ -52,30 +58,30 @@ export async function handler(event) {
     return json(400, { error: 'Bad payload' })
   }
 
-  if (!webhookAuthorized(event) && !photoNotifyAuthorized(payload)) {
+  let lead = null
+  try {
+    lead = await loadLead(payload.lead_id)
+  } catch (error) {
+    console.error('notify-photos-added lookup:', error.message)
+  }
+
+  const allowed =
+    webhookAuthorized(event) ||
+    photoNotifyAuthorized(payload) ||
+    photosBelongToLead(lead, payload.urls)
+
+  if (!allowed) {
     return json(401, { error: 'Unauthorized' })
   }
 
-  let name = payload.name
-  let jobType = payload.job_type
-  let phone = payload.phone
-  let photoCount = Number(payload.photo_count) || 0
-  const addedCount = Number(payload.added_count) || 0
+  const name = payload.name || lead?.name
+  const jobType = payload.job_type || lead?.job_type
+  const phone = payload.phone || lead?.phone
+  const photoCount = Number(payload.photo_count) || lead?.photo_urls?.length || 0
+  const addedCount = Number(payload.added_count) || payload.urls?.length || 0
 
   if (!name || !jobType) {
-    try {
-      const lead = await loadLead(payload.lead_id)
-      if (!lead) {
-        return json(404, { error: 'lead not found' })
-      }
-      name = name || lead.name
-      jobType = jobType || lead.job_type
-      phone = phone || lead.phone
-      if (!photoCount) photoCount = lead.photo_urls?.length || 0
-    } catch (error) {
-      console.error('notify-photos-added lookup:', error.message)
-      return json(502, { error: 'lookup failed' })
-    }
+    return json(404, { error: 'lead not found' })
   }
 
   const addedLabel = addedCount > 0 ? addedCount : photoCount

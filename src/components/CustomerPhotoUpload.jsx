@@ -86,11 +86,22 @@ function CustomerPhotoUpload({ leadId }) {
       }),
     )
 
-    if (!updateError && data?.token) {
+    if (!updateError) {
+      const payload =
+        data && typeof data === 'object' && !Array.isArray(data)
+          ? data
+          : Array.isArray(data)
+            ? data[0]
+            : {}
       fetch('/.netlify/functions/notify-photos-added', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          lead_id: leadId,
+          urls: uploadedUrls.map((entry) => entry.url),
+          added_count: uploadedUrls.length,
+          ...payload,
+        }),
       }).catch(() => {})
     }
   }
