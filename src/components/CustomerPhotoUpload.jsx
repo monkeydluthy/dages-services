@@ -65,7 +65,7 @@ function CustomerPhotoUpload({ leadId }) {
 
     if (uploadedUrls.length === 0) return
 
-    const { error: updateError } = await supabase.rpc('append_lead_photos', {
+    const { data, error: updateError } = await supabase.rpc('append_lead_photos', {
       lead_id: leadId,
       urls: uploadedUrls.map((entry) => entry.url),
     })
@@ -85,6 +85,14 @@ function CustomerPhotoUpload({ leadId }) {
         return { ...row, status: 'done' }
       }),
     )
+
+    if (!updateError && data?.token) {
+      fetch('/.netlify/functions/notify-photos-added', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }).catch(() => {})
+    }
   }
 
   if (!canUpload) return null

@@ -1,4 +1,4 @@
-import { timingSafeEqual } from 'node:crypto'
+import { createHmac, timingSafeEqual } from 'node:crypto'
 
 export function json(statusCode, body) {
   return {
@@ -26,6 +26,20 @@ export function secretsMatch(provided, expected) {
 
 export function webhookAuthorized(event) {
   return secretsMatch(getHeader(event, 'x-webhook-secret'), process.env.WEBHOOK_SECRET)
+}
+
+export function photoNotifyToken(leadId, photoCount) {
+  const secret = process.env.WEBHOOK_SECRET
+  if (!secret || !leadId) return ''
+  return createHmac('sha256', secret)
+    .update(`${leadId}:${Number(photoCount) || 0}`)
+    .digest('hex')
+}
+
+export function photoNotifyAuthorized(payload) {
+  const token = payload?.token
+  const expected = photoNotifyToken(payload?.lead_id, payload?.photo_count)
+  return secretsMatch(token, expected)
 }
 
 export function leadAlertUrl(leadId) {

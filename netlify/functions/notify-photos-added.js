@@ -3,6 +3,7 @@ import {
   json,
   leadAlertUrl,
   notifyChannels,
+  photoNotifyAuthorized,
   webhookAuthorized,
 } from '../lib/notify.js'
 
@@ -44,15 +45,15 @@ export async function handler(event) {
     return json(405, { error: 'Method not allowed' })
   }
 
-  if (!webhookAuthorized(event)) {
-    return json(401, { error: 'Unauthorized' })
-  }
-
   let payload
   try {
     payload = parseBody(event)
   } catch {
     return json(400, { error: 'Bad payload' })
+  }
+
+  if (!webhookAuthorized(event) && !photoNotifyAuthorized(payload)) {
+    return json(401, { error: 'Unauthorized' })
   }
 
   let name = payload.name
