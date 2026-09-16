@@ -6,7 +6,8 @@ import { supabase } from '../lib/supabaseClient'
 const PHONE_PATTERN = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/
 const EMERGENCY_JOBS = new Set(['Storm cleanup', 'Hazardous removal'])
 
-const fieldClass = 'w-full rounded-md border border-brand/30 px-3 py-2.5 text-ink'
+const fieldClass =
+  'w-full rounded-md border border-brand/30 px-3 py-2.5 text-base text-ink'
 
 function LeadForm({ id = 'lead-form', plain = false }) {
   const navigate = useNavigate()
@@ -21,6 +22,9 @@ function LeadForm({ id = 'lead-form', plain = false }) {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur()
+    }
     setError('')
 
     if (!PHONE_PATTERN.test(phone.trim())) {
@@ -158,7 +162,7 @@ function LeadForm({ id = 'lead-form', plain = false }) {
               value={notes}
               onChange={(event) => setNotes(event.target.value)}
               placeholder="Anything Joe should know before he calls"
-              className={`${fieldClass} text-sm max-md:min-h-20`}
+              className={`${fieldClass} max-md:min-h-20`}
             />
           </label>
           {error ? (

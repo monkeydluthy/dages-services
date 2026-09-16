@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import CustomerPhotoUpload from '../components/CustomerPhotoUpload'
 import Footer from '../components/Footer'
@@ -6,6 +7,10 @@ import siteConfig from '../config/siteConfig.json'
 function ThankYouPage() {
   const [searchParams] = useSearchParams()
   const leadId = searchParams.get('lead_id') ?? ''
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   return (
     <main className="flex min-h-screen flex-col">

@@ -22,27 +22,28 @@ function Hero() {
   const showVideo = useMdUp()
 
   return (
-    <section className="relative overflow-hidden text-brandTint">
-      {showVideo ? (
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={heroPoster}
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src={heroVideo} type="video/mp4" />
-        </video>
-      ) : (
-        <img
-          src={heroPoster}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover"
-          aria-hidden="true"
-        />
-      )}
-      <div className="absolute inset-0 bg-brand/80" aria-hidden="true" />
+    <section className="relative text-brandTint">
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+        {showVideo ? (
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            poster={heroPoster}
+            className="absolute inset-0 h-full w-full object-cover"
+          >
+            <source src={heroVideo} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            src={heroPoster}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-brand/80" />
+      </div>
       <div className="relative z-10 mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-2 md:items-center md:gap-20 md:py-16">
         <div className="flex flex-col gap-5">
           <p className="text-sm font-semibold uppercase tracking-wide text-brandTint">
