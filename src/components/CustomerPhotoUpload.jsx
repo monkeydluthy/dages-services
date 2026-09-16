@@ -25,60 +25,66 @@ function CustomerPhotoUpload({ leadId }) {
 
     if (!canUpload || files.length === 0) return
 
-    for (const file of files) {
-      const itemId = crypto.randomUUID()
-      setItems((current) => [
-        ...current,
-        { id: itemId, name: file.name, status: 'uploading' },
-      ])
+    const batch = files.map((file) => ({
+      id: crypto.randomUUID(),
+      name: file.name,
+      file,
+      status: 'uploading',
+    }))
 
-      const objectPath = `${leadId}/${Date.now()}-${sanitizeFileName(file.name)}`
+    setItems((current) => [...current, ...batch])
 
-      const { error: uploadError } = await supabase.storage
-        .from('job-photos')
-        .upload(objectPath, file, {
-          contentType: file.type || 'image/jpeg',
-          upsert: false,
-        })
+    const uploadedUrls = []
 
-      if (uploadError) {
-        setItems((current) =>
-          current.map((item) =>
-            item.id === itemId
-              ? { ...item, status: 'error', error: 'Upload failed. Try another photo.' }
-              : item,
-          ),
-        )
-        continue
-      }
+    await Promise.all(
+      batch.map(async (item, index) => {
+        const objectPath = `${leadId}/${Date.now()}-${index}-${item.id.slice(0, 8)}-${sanitizeFileName(item.file.name)}`
 
-      const { data } = supabase.storage.from('job-photos').getPublicUrl(objectPath)
-      const { error: updateError } = await supabase.rpc('append_lead_photos', {
-        lead_id: leadId,
-        urls: [data.publicUrl],
-      })
+        const { error: uploadError } = await supabase.storage
+          .from('job-photos')
+          .upload(objectPath, item.file, {
+            contentType: item.file.type || 'image/jpeg',
+            upsert: false,
+          })
 
-      if (updateError) {
-        setItems((current) =>
-          current.map((item) =>
-            item.id === itemId
-              ? {
-                  ...item,
-                  status: 'error',
-                  error: 'Uploaded, but we could not attach it to your request.',
-                }
-              : item,
-          ),
-        )
-        continue
-      }
+        if (uploadError) {
+          setItems((current) =>
+            current.map((row) =>
+              row.id === item.id
+                ? { ...row, status: 'error', error: 'Upload failed. Try another photo.' }
+                : row,
+            ),
+          )
+          return
+        }
 
-      setItems((current) =>
-        current.map((item) =>
-          item.id === itemId ? { ...item, status: 'done' } : item,
-        ),
-      )
-    }
+        const { data } = supabase.storage.from('job-photos').getPublicUrl(objectPath)
+        uploadedUrls.push({ id: item.id, url: data.publicUrl })
+      }),
+    )
+
+    if (uploadedUrls.length === 0) return
+
+    const { error: updateError } = await supabase.rpc('append_lead_photos', {
+      lead_id: leadId,
+      urls: uploadedUrls.map((entry) => entry.url),
+    })
+
+    const uploadedIds = new Set(uploadedUrls.map((entry) => entry.id))
+
+    setItems((current) =>
+      current.map((row) => {
+        if (!uploadedIds.has(row.id)) return row
+        if (updateError) {
+          return {
+            ...row,
+            status: 'error',
+            error: 'Uploaded, but we could not attach it to your request.',
+          }
+        }
+        return { ...row, status: 'done' }
+      }),
+    )
   }
 
   if (!canUpload) return null
@@ -98,6 +104,9 @@ function CustomerPhotoUpload({ leadId }) {
         onChange={handleFileSelect}
         className="block w-full text-sm text-ink/70 file:mr-4 file:rounded-md file:border-0 file:bg-brand file:px-4 file:py-2 file:text-sm file:font-medium file:text-brandTint"
       />
+      <p className="mt-2 text-xs text-ink/50">
+        Optional — Joseph will still call. You can select several photos at once.
+      </p>
       {items.length > 0 ? (
         <ul className="mt-3 space-y-1.5 text-sm">
           {items.map((item) => (
@@ -117,9 +126,7 @@ function CustomerPhotoUpload({ leadId }) {
             </li>
           ))}
         </ul>
-      ) : (
-        <p className="mt-2 text-xs text-ink/50">You can skip this — Joseph will still call.</p>
-      )}
+      ) : null}
     </div>
   )
 }

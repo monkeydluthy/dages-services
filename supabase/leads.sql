@@ -29,27 +29,89 @@ drop policy if exists "authenticated update leads" on leads;
 create policy "authenticated update leads"
   on leads for update to authenticated using (true);
 
+-- Secrets for photo alerts live here, not in Netlify env. Postgres cannot
+-- read Netlify SITE_URL / WEBHOOK_SECRET. Insert the SAME values once:
+--   insert into private.notify_settings (site_url, webhook_secret)
+--   values ('https://dages-services.netlify.app', 'your-webhook-secret')
+--   on conflict (id) do update
+--     set site_url = excluded.site_url,
+--         webhook_secret = excluded.webhook_secret;
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated;
+
+create table if not exists private.notify_settings (
+  id int primary key default 1 check (id = 1),
+  site_url text not null,
+  webhook_secret text not null
+);
+
+alter table private.notify_settings enable row level security;
+
+revoke all on table private.notify_settings from public, anon, authenticated;
+
+create extension if not exists pg_net;
+
 -- Customers on /thank-you are anonymous and must not SELECT or UPDATE leads
 -- (that would leak PII or let anyone change status). This RPC only appends
--- photo URLs for the lead id they already have from the thank-you URL.
+-- photo URLs for the lead id they already have from the thank-you URL, then
+-- pings notify-photos-added. Status edits in admin do not go through here.
 create or replace function public.append_lead_photos(lead_id uuid, urls text[])
 returns void
 language plpgsql
 security definer
 set search_path = public
 as $$
+declare
+  added int;
+  photo_count int;
+  lead_name text;
+  lead_job text;
+  lead_phone text;
+  notify_url text;
+  notify_secret text;
 begin
   if urls is null or cardinality(urls) = 0 then
     return;
   end if;
 
+  added := cardinality(urls);
+
   update public.leads
   set photo_urls = coalesce(photo_urls, '{}'::text[]) || urls
-  where id = lead_id;
+  where id = lead_id
+  returning name, job_type, phone, cardinality(coalesce(photo_urls, '{}'::text[]))
+  into lead_name, lead_job, lead_phone, photo_count;
 
   if not found then
     raise exception 'lead not found';
   end if;
+
+  begin
+    select site_url, webhook_secret
+      into notify_url, notify_secret
+    from private.notify_settings
+    where id = 1;
+
+    if coalesce(notify_url, '') <> '' and coalesce(notify_secret, '') <> '' then
+      perform net.http_post(
+        url := rtrim(notify_url, '/') || '/.netlify/functions/notify-photos-added',
+        headers := jsonb_build_object(
+          'Content-Type', 'application/json',
+          'x-webhook-secret', notify_secret
+        ),
+        body := jsonb_build_object(
+          'lead_id', lead_id,
+          'photo_count', photo_count,
+          'added_count', added,
+          'name', lead_name,
+          'job_type', lead_job,
+          'phone', lead_phone
+        )
+      );
+    end if;
+  exception when others then
+    raise warning 'append_lead_photos notify skipped: %', sqlerrm;
+  end;
 end;
 $$;
 
