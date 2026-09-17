@@ -20,43 +20,110 @@ function PlayIcon() {
   )
 }
 
-function GalleryMedia({ item }) {
-  const [playing, setPlaying] = useState(false)
-  const alt = item.title || 'Recent work'
-
-  if (item.media_type !== 'video') {
-    return <img src={item.media_url} alt={alt} className="aspect-square w-full object-cover" />
-  }
-
-  if (playing) {
+function GalleryThumb({ item }) {
+  if (item.media_type === 'video') {
     return (
-      <video
-        src={item.media_url}
-        controls
-        autoPlay
-        playsInline
-        className="aspect-square w-full object-cover"
-      />
+      <span className="relative block">
+        <video
+          src={item.media_url}
+          muted
+          preload="metadata"
+          className="pointer-events-none aspect-square w-full object-cover"
+        />
+        <span className="absolute inset-0 flex items-center justify-center bg-ink/35">
+          <PlayIcon />
+        </span>
+      </span>
     )
   }
 
+  return <img src={item.media_url} alt="" className="aspect-square w-full object-cover" />
+}
+
+function GalleryLightbox({ items, index, onClose, onChange }) {
+  const item = items[index]
+  const hasPrev = index > 0
+  const hasNext = index < items.length - 1
+  const alt = item?.title || 'Recent work'
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    function onKey(event) {
+      if (event.key === 'Escape') onClose()
+      if (event.key === 'ArrowLeft' && hasPrev) onChange(index - 1)
+      if (event.key === 'ArrowRight' && hasNext) onChange(index + 1)
+    }
+
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [hasNext, hasPrev, index, onChange, onClose])
+
+  if (!item) return null
+
   return (
-    <button
-      type="button"
-      onClick={() => setPlaying(true)}
-      className="relative block w-full"
-      aria-label={`Play ${alt}`}
+    <div
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/80 p-4"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={alt}
     >
-      <video
-        src={item.media_url}
-        muted
-        preload="metadata"
-        className="pointer-events-none aspect-square w-full object-cover"
-      />
-      <span className="absolute inset-0 flex items-center justify-center bg-ink/35">
-        <PlayIcon />
-      </span>
-    </button>
+      <div
+        className="relative max-h-full w-full max-w-4xl"
+        onClick={(event) => event.stopPropagation()}
+      >
+        {item.media_type === 'video' ? (
+          <video
+            key={item.id}
+            src={item.media_url}
+            controls
+            autoPlay
+            playsInline
+            className="max-h-[80vh] w-full rounded-lg bg-ink object-contain"
+          />
+        ) : (
+          <img
+            src={item.media_url}
+            alt={alt}
+            className="mx-auto max-h-[80vh] w-auto max-w-full rounded-lg object-contain"
+          />
+        )}
+        <p className="mt-2 text-center text-sm text-brandTint">
+          {item.title || 'Recent work'}
+          {items.length > 1 ? ` · ${index + 1} of ${items.length}` : ''}
+        </p>
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute -right-1 -top-3 rounded-full bg-white px-3 py-1 text-sm font-semibold text-ink shadow"
+        >
+          Close
+        </button>
+        {hasPrev ? (
+          <button
+            type="button"
+            onClick={() => onChange(index - 1)}
+            className="absolute left-0 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-2 py-1 text-sm font-semibold text-ink"
+          >
+            Prev
+          </button>
+        ) : null}
+        {hasNext ? (
+          <button
+            type="button"
+            onClick={() => onChange(index + 1)}
+            className="absolute right-0 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-2 py-1 text-sm font-semibold text-ink"
+          >
+            Next
+          </button>
+        ) : null}
+      </div>
+    </div>
   )
 }
 
@@ -64,6 +131,7 @@ function PortfolioGallery() {
   const [items, setItems] = useState([])
   const [ready, setReady] = useState(false)
   const [page, setPage] = useState(0)
+  const [viewerIndex, setViewerIndex] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -130,16 +198,34 @@ function PortfolioGallery() {
                 key={pageIndex}
                 className="grid w-full min-w-full shrink-0 grid-cols-2 gap-3 md:grid-cols-4 md:gap-4"
               >
-                {pageItems.map((item) => (
-                  <li key={item.id} className="overflow-hidden rounded-lg bg-brandTint">
-                    <GalleryMedia item={item} />
-                  </li>
-                ))}
+                {pageItems.map((item) => {
+                  const itemIndex = items.findIndex((entry) => entry.id === item.id)
+                  return (
+                    <li key={item.id} className="overflow-hidden rounded-lg bg-brandTint">
+                      <button
+                        type="button"
+                        onClick={() => setViewerIndex(itemIndex)}
+                        className="block w-full text-left hover:opacity-90"
+                        aria-label={`Open ${item.title || 'recent work'}`}
+                      >
+                        <GalleryThumb item={item} />
+                      </button>
+                    </li>
+                  )
+                })}
               </ul>
             ))}
           </div>
         </div>
       </div>
+      {viewerIndex !== null ? (
+        <GalleryLightbox
+          items={items}
+          index={viewerIndex}
+          onClose={() => setViewerIndex(null)}
+          onChange={setViewerIndex}
+        />
+      ) : null}
     </section>
   )
 }
