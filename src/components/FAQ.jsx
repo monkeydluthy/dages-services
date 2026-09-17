@@ -12,7 +12,7 @@ const questions = [
     id: 'estimates',
     question: 'Do you offer free estimates?',
     answer:
-      'Yes. Tell us the job and we'll quote it. No charge to come look.',
+      "Yes. Tell us the job and we'll quote it. No charge to come look.",
   },
   {
     id: 'licensed',
