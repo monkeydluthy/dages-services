@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import siteConfig from '../config/siteConfig.json'
+import { videoPosterPath } from '../lib/portfolioMedia'
 import { supabase } from '../lib/supabaseClient'
 
 const fieldClass = 'w-full rounded-md border border-brand/30 px-3 py-2.5 text-ink'
@@ -14,6 +15,49 @@ function detectMediaType(file) {
 function sanitizeFileName(name) {
   const base = name.split(/[/\\]/).pop() || 'upload'
   return base.replace(/[^\w.-]+/g, '-').replace(/-+/g, '-')
+}
+
+function captureVideoPoster(file) {
+  return new Promise((resolve) => {
+    const video = document.createElement('video')
+    video.muted = true
+    video.playsInline = true
+    video.preload = 'auto'
+    const objectUrl = URL.createObjectURL(file)
+    video.src = objectUrl
+
+    const cleanup = (blob) => {
+      if (video.dataset.done === '1') return
+      video.dataset.done = '1'
+      URL.revokeObjectURL(objectUrl)
+      resolve(blob)
+    }
+
+    const capture = () => {
+      if (!video.videoWidth) {
+        cleanup(null)
+        return
+      }
+      const maxEdge = 720
+      const scale = Math.min(1, maxEdge / Math.max(video.videoWidth, video.videoHeight))
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.max(1, Math.round(video.videoWidth * scale))
+      canvas.height = Math.max(1, Math.round(video.videoHeight * scale))
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
+      canvas.toBlob((blob) => cleanup(blob), 'image/jpeg', 0.82)
+    }
+
+    video.addEventListener('error', () => cleanup(null), { once: true })
+    video.addEventListener('seeked', capture, { once: true })
+    video.addEventListener(
+      'loadeddata',
+      () => {
+        video.currentTime = Math.min(0.5, Math.max(0.1, (video.duration || 1) * 0.08))
+      },
+      { once: true },
+    )
+    window.setTimeout(() => cleanup(null), 8000)
+  })
 }
 
 function uploadWithProgress(file, objectPath, onProgress) {
@@ -128,6 +172,22 @@ function AdminUpload({ onUploaded }) {
       await uploadWithProgress(file, objectPath, setProgress)
       setProgress(100)
 
+      if (mediaType === 'video') {
+        const poster = await captureVideoPoster(file)
+        const posterPath = videoPosterPath(objectPath)
+        if (poster && posterPath) {
+          const { error: posterError } = await supabase.storage
+            .from('portfolio-media')
+            .upload(posterPath, poster, {
+              contentType: 'image/jpeg',
+              upsert: true,
+            })
+          if (posterError) {
+            console.error('portfolio poster:', posterError.message)
+          }
+        }
+      }
+
       const { data: publicData } = supabase.storage
         .from('portfolio-media')
         .getPublicUrl(objectPath)
@@ -140,7 +200,10 @@ function AdminUpload({ onUploaded }) {
       })
 
       if (insertError) {
-        await supabase.storage.from('portfolio-media').remove([objectPath])
+        const extras = mediaType === 'video' ? [videoPosterPath(objectPath)] : []
+        await supabase.storage
+          .from('portfolio-media')
+          .remove([objectPath, ...extras.filter(Boolean)])
         throw new Error('File uploaded but saving the row failed. Try again.')
       }
 

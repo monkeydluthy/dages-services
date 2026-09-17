@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { videoPosterUrl } from '../lib/portfolioMedia'
 import { supabase } from '../lib/supabaseClient'
 
 const PAGE_SIZE = 8
@@ -22,14 +23,12 @@ function PlayIcon() {
 
 function GalleryThumb({ item }) {
   if (item.media_type === 'video') {
+    const poster = videoPosterUrl(item.media_url)
     return (
-      <span className="relative block">
-        <video
-          src={item.media_url}
-          muted
-          preload="metadata"
-          className="pointer-events-none aspect-square w-full object-cover"
-        />
+      <span className="relative block bg-ink/10">
+        {poster ? (
+          <img src={poster} alt="" className="aspect-square w-full object-cover" />
+        ) : null}
         <span className="absolute inset-0 flex items-center justify-center bg-ink/35">
           <PlayIcon />
         </span>
@@ -81,6 +80,7 @@ function GalleryLightbox({ items, index, onClose, onChange }) {
           <video
             key={item.id}
             src={item.media_url}
+            poster={videoPosterUrl(item.media_url) || undefined}
             controls
             autoPlay
             playsInline

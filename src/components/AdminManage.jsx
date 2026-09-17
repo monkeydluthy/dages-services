@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react'
+import { storagePathFromPublicUrl, videoPosterPath } from '../lib/portfolioMedia'
 import { supabase } from '../lib/supabaseClient'
-
-function storagePathFromPublicUrl(url) {
-  const marker = '/storage/v1/object/public/portfolio-media/'
-  const index = url.indexOf(marker)
-  if (index === -1) return null
-  return decodeURIComponent(url.slice(index + marker.length))
-}
 
 function AdminManage({ refreshKey = 0 }) {
   const [items, setItems] = useState([])
@@ -55,9 +49,13 @@ function AdminManage({ refreshKey = 0 }) {
 
     const path = storagePathFromPublicUrl(item.media_url)
     if (path) {
+      const toRemove = [path]
+      const posterPath = item.media_type === 'video' ? videoPosterPath(path) : null
+      if (posterPath) toRemove.push(posterPath)
+
       const { error: storageError } = await supabase.storage
         .from('portfolio-media')
-        .remove([path])
+        .remove(toRemove)
 
       if (storageError) {
         setDeletingId('')
