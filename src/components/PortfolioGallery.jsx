@@ -6,9 +6,20 @@ const PAGE_SIZE = 8
 const ITEM_LIMIT = 24
 
 function chunkItems(items, size) {
+  if (items.length <= size) return [items]
+
   const pages = []
-  for (let index = 0; index < items.length; index += size) {
-    pages.push(items.slice(index, index + size))
+  let start = 0
+  while (start < items.length) {
+    const remaining = items.length - start
+    if (remaining <= size) {
+      pages.push(items.slice(start))
+      break
+    }
+    const leftover = remaining - size
+    const take = leftover > 0 && leftover < size ? remaining : size
+    pages.push(items.slice(start, start + take))
+    start += take
   }
   return pages
 }
@@ -159,6 +170,7 @@ function PortfolioGallery() {
 
   const pages = chunkItems(items, PAGE_SIZE)
   const lastPage = pages.length - 1
+  const currentPage = Math.min(page, lastPage)
   const showPager = lastPage > 0
 
   return (
@@ -170,7 +182,7 @@ function PortfolioGallery() {
             <div className="flex gap-2">
               <button
                 type="button"
-                disabled={page === 0}
+                disabled={currentPage === 0}
                 onClick={() => setPage((current) => Math.max(0, current - 1))}
                 className="rounded-md border border-brand/30 bg-white px-3 py-2 text-sm font-semibold text-ink hover:bg-brandTint disabled:cursor-not-allowed disabled:opacity-40"
               >
@@ -178,7 +190,7 @@ function PortfolioGallery() {
               </button>
               <button
                 type="button"
-                disabled={page === lastPage}
+                disabled={currentPage === lastPage}
                 onClick={() => setPage((current) => Math.min(lastPage, current + 1))}
                 className="rounded-md bg-brand px-3 py-2 text-sm font-semibold text-brandTint hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
               >
@@ -190,18 +202,18 @@ function PortfolioGallery() {
 
         <div className="overflow-hidden">
           <div
-            className="flex transition-transform duration-500 ease-out"
-            style={{ transform: `translateX(-${page * 100}%)` }}
+            className="flex items-start transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${currentPage * 100}%)` }}
           >
             {pages.map((pageItems, pageIndex) => (
               <ul
                 key={pageIndex}
-                className="grid w-full min-w-full shrink-0 grid-cols-2 gap-3 md:grid-cols-4 md:gap-4"
+                className="grid w-full min-w-full shrink-0 grid-cols-2 content-start items-start gap-3 md:grid-cols-4 md:gap-4"
               >
                 {pageItems.map((item) => {
                   const itemIndex = items.findIndex((entry) => entry.id === item.id)
                   return (
-                    <li key={item.id} className="overflow-hidden rounded-lg bg-brandTint">
+                    <li key={item.id} className="min-w-0 overflow-hidden rounded-lg bg-brandTint">
                       <button
                         type="button"
                         onClick={() => setViewerIndex(itemIndex)}
