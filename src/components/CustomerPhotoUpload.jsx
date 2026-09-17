@@ -124,7 +124,7 @@ function CustomerPhotoUpload({ leadId }) {
         className="block w-full text-sm text-ink/70 file:mr-4 file:rounded-md file:border-0 file:bg-brand file:px-4 file:py-2 file:text-sm file:font-medium file:text-brandTint"
       />
       <p className="mt-2 text-xs text-ink/50">
-        Optional — Joseph will still call. You can select several photos at once.
+        Optional — we'll still follow up. You can select several photos at once.
       </p>
       {items.length > 0 ? (
         <ul className="mt-3 space-y-1.5 text-sm">

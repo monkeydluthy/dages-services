@@ -12,7 +12,7 @@ const questions = [
     id: 'estimates',
     question: 'Do you offer free estimates?',
     answer:
-      'Yes. Tell us the job and Joseph will quote it. No charge to come look.',
+      'Yes. Tell us the job and we'll quote it. No charge to come look.',
   },
   {
     id: 'licensed',
@@ -23,7 +23,7 @@ const questions = [
     id: 'storm',
     question: 'How fast can you get here for storm damage?',
     answer:
-      'Call or send the form. Storm and hazardous jobs go first — Joseph usually calls back within minutes.',
+      'Call or send the form. Storm and hazardous jobs go first — we usually follow up within minutes.',
   },
   {
     id: 'stump',

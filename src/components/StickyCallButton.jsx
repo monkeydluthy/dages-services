@@ -20,7 +20,7 @@ function StickyCallButton() {
       className="fixed inset-x-0 bottom-0 z-40 flex h-14 items-center justify-center gap-2 bg-brand text-base font-semibold text-brandTint md:hidden"
     >
       <PhoneIcon />
-      Call Joseph Now
+      Call Now
     </a>
   )
 }

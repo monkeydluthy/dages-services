@@ -104,7 +104,7 @@ function LandingPage() {
       <section className="bg-brand px-4 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl">
           <h2 className="mx-auto mb-10 max-w-3xl text-center text-2xl font-bold text-white sm:text-3xl">
-            Still deciding? Send us your info and Joseph will call.
+            Still deciding? Send the job details and we'll follow up.
           </h2>
 
           <div className="grid gap-8 md:grid-cols-2 md:items-stretch md:gap-12">

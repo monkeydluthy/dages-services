@@ -72,8 +72,8 @@ function LeadForm({ id = 'lead-form', plain = false }) {
       >
         <h2 className="mb-2 text-xl font-bold text-ink sm:text-2xl">{siteConfig.cta}</h2>
         <p className="mb-4 text-sm text-ink/70 sm:mb-6 md:mb-4">
-          No self-serve booking — tell us the job and how soon you need it. Joseph
-          calls you back.
+          No self-serve booking — tell us the job and how soon you need it. We'll
+          follow up.
         </p>
         <form className="grid gap-4" onSubmit={handleSubmit}>
           <div className="grid gap-4 md:grid-cols-2">
