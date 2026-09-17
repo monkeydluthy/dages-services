@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { videoPosterUrl } from '../lib/portfolioMedia'
 import { supabase } from '../lib/supabaseClient'
 
@@ -6,20 +6,9 @@ const PAGE_SIZE = 8
 const ITEM_LIMIT = 24
 
 function chunkItems(items, size) {
-  if (items.length <= size) return [items]
-
   const pages = []
-  let start = 0
-  while (start < items.length) {
-    const remaining = items.length - start
-    if (remaining <= size) {
-      pages.push(items.slice(start))
-      break
-    }
-    const leftover = remaining - size
-    const take = leftover > 0 && leftover < size ? remaining : size
-    pages.push(items.slice(start, start + take))
-    start += take
+  for (let start = 0; start < items.length; start += size) {
+    pages.push(items.slice(start, start + size))
   }
   return pages
 }
@@ -143,6 +132,8 @@ function PortfolioGallery() {
   const [ready, setReady] = useState(false)
   const [page, setPage] = useState(0)
   const [viewerIndex, setViewerIndex] = useState(null)
+  const [trackHeight, setTrackHeight] = useState(null)
+  const pageRefs = useRef([])
 
   useEffect(() => {
     let cancelled = false
@@ -164,14 +155,28 @@ function PortfolioGallery() {
     }
   }, [])
 
+  const pages = chunkItems(items, PAGE_SIZE)
+  const lastPage = Math.max(0, pages.length - 1)
+  const currentPage = Math.min(page, lastPage)
+  const showPager = lastPage > 0
+
+  useLayoutEffect(() => {
+    const el = pageRefs.current[currentPage]
+    if (!el) return undefined
+
+    const updateHeight = () => {
+      setTrackHeight(el.getBoundingClientRect().height)
+    }
+
+    updateHeight()
+    const observer = new ResizeObserver(updateHeight)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [currentPage, items])
+
   if (!ready || items.length === 0) {
     return null
   }
-
-  const pages = chunkItems(items, PAGE_SIZE)
-  const lastPage = pages.length - 1
-  const currentPage = Math.min(page, lastPage)
-  const showPager = lastPage > 0
 
   return (
     <section className="bg-white">
@@ -200,7 +205,10 @@ function PortfolioGallery() {
           ) : null}
         </div>
 
-        <div className="overflow-hidden">
+        <div
+          className="overflow-hidden transition-[height] duration-500 ease-out"
+          style={trackHeight != null ? { height: `${trackHeight}px` } : undefined}
+        >
           <div
             className="flex items-start transition-transform duration-500 ease-out"
             style={{ transform: `translateX(-${currentPage * 100}%)` }}
@@ -208,12 +216,18 @@ function PortfolioGallery() {
             {pages.map((pageItems, pageIndex) => (
               <ul
                 key={pageIndex}
-                className="grid w-full min-w-full shrink-0 grid-cols-2 content-start items-start gap-3 md:grid-cols-4 md:gap-4"
+                ref={(node) => {
+                  pageRefs.current[pageIndex] = node
+                }}
+                className="flex w-full min-w-full shrink-0 flex-wrap justify-center gap-3 md:gap-4"
               >
                 {pageItems.map((item) => {
                   const itemIndex = items.findIndex((entry) => entry.id === item.id)
                   return (
-                    <li key={item.id} className="min-w-0 overflow-hidden rounded-lg bg-brandTint">
+                    <li
+                      key={item.id}
+                      className="min-w-0 shrink-0 basis-[calc((100%-0.75rem)/2)] overflow-hidden rounded-lg bg-brandTint md:basis-[calc((100%-3rem)/4)]"
+                    >
                       <button
                         type="button"
                         onClick={() => setViewerIndex(itemIndex)}
