@@ -39,6 +39,45 @@ function GalleryThumb({ item }) {
   return <img src={item.media_url} alt="" className="aspect-square w-full object-cover" />
 }
 
+function CloseIcon() {
+  return (
+    <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function ChevronLeftIcon() {
+  return (
+    <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M15 5 8 12l7 7"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg className="h-8 w-8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="m9 5 7 7-7 7"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+const lightboxControlClass =
+  'absolute z-[81] flex items-center justify-center rounded-full p-2 text-white/80 transition-colors hover:bg-white/10 hover:text-white'
+
 function GalleryLightbox({ items, index, onClose, onChange }) {
   const item = items[index]
   const hasPrev = index > 0
@@ -66,12 +105,49 @@ function GalleryLightbox({ items, index, onClose, onChange }) {
 
   return (
     <div
-      className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/80 p-4"
+      className="fixed inset-0 z-[80] flex items-center justify-center bg-black/80 p-4"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label={alt}
     >
+      <button
+        type="button"
+        onClick={(event) => {
+          event.stopPropagation()
+          onClose()
+        }}
+        className={`${lightboxControlClass} right-3 top-3 sm:right-5 sm:top-5`}
+        aria-label="Close"
+      >
+        <CloseIcon />
+      </button>
+      {hasPrev ? (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation()
+            onChange(index - 1)
+          }}
+          className={`${lightboxControlClass} left-2 top-1/2 -translate-y-1/2 sm:left-4`}
+          aria-label="Previous"
+        >
+          <ChevronLeftIcon />
+        </button>
+      ) : null}
+      {hasNext ? (
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation()
+            onChange(index + 1)
+          }}
+          className={`${lightboxControlClass} right-2 top-1/2 -translate-y-1/2 sm:right-4`}
+          aria-label="Next"
+        >
+          <ChevronRightIcon />
+        </button>
+      ) : null}
       <div
         className="relative max-h-full w-full max-w-4xl"
         onClick={(event) => event.stopPropagation()}
@@ -93,35 +169,10 @@ function GalleryLightbox({ items, index, onClose, onChange }) {
             className="mx-auto max-h-[80vh] w-auto max-w-full rounded-lg object-contain"
           />
         )}
-        <p className="mt-2 text-center text-sm text-brandTint">
+        <p className="mt-2 text-center text-sm text-white/80">
           {item.title || 'Recent work'}
           {items.length > 1 ? ` · ${index + 1} of ${items.length}` : ''}
         </p>
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute -right-1 -top-3 rounded-full bg-white px-3 py-1 text-sm font-semibold text-ink shadow"
-        >
-          Close
-        </button>
-        {hasPrev ? (
-          <button
-            type="button"
-            onClick={() => onChange(index - 1)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-2 py-1 text-sm font-semibold text-ink"
-          >
-            Prev
-          </button>
-        ) : null}
-        {hasNext ? (
-          <button
-            type="button"
-            onClick={() => onChange(index + 1)}
-            className="absolute right-0 top-1/2 -translate-y-1/2 rounded-md bg-white/90 px-2 py-1 text-sm font-semibold text-ink"
-          >
-            Next
-          </button>
-        ) : null}
       </div>
     </div>
   )
