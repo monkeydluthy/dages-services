@@ -49,10 +49,19 @@ export function leadAlertUrl(leadId) {
   return leadId ? `${url}&lead_id=${leadId}` : url
 }
 
+function envCsvList(value) {
+  return String(value || '')
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+}
+
 export async function sendResendEmail({ to, from, subject, text }) {
   if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY is not set')
   if (!from) throw new Error('RESEND_FROM_EMAIL is not set')
-  if (!to) throw new Error('LEAD_ALERT_EMAIL_TO is not set')
+
+  const recipients = Array.isArray(to) ? envCsvList(to.join(',')) : envCsvList(to)
+  if (!recipients.length) throw new Error('LEAD_ALERT_EMAIL_TO is not set')
 
   const response = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -60,7 +69,7 @@ export async function sendResendEmail({ to, from, subject, text }) {
       Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from, to: [to], subject, text }),
+    body: JSON.stringify({ from, to: recipients, subject, text }),
   })
 
   if (!response.ok) {
@@ -70,14 +79,9 @@ export async function sendResendEmail({ to, from, subject, text }) {
 }
 
 function oneSignalExternalIds() {
-  const fromList = (process.env.ONESIGNAL_EXTERNAL_IDS || '')
-    .split(',')
-    .map((value) => value.trim())
-    .filter(Boolean)
+  const fromList = envCsvList(process.env.ONESIGNAL_EXTERNAL_IDS)
   if (fromList.length) return fromList
-
-  const fallback = (process.env.LEAD_ALERT_EMAIL_TO || '').trim()
-  return fallback ? [fallback] : []
+  return envCsvList(process.env.LEAD_ALERT_EMAIL_TO)
 }
 
 function oneSignalAuthHeader(apiKey) {
