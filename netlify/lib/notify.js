@@ -63,18 +63,45 @@ export async function sendResendEmail({ to, from, subject, text }) {
   const recipients = Array.isArray(to) ? envCsvList(to.join(',')) : envCsvList(to)
   if (!recipients.length) throw new Error('LEAD_ALERT_EMAIL_TO is not set')
 
-  const response = await fetch('https://api.resend.com/emails', {
+  const resendUrl = 'https://api.resend.com/emails'
+  const payload = { from, to: recipients, subject, text }
+
+  console.log('Resend request:', {
+    url: resendUrl,
+    to: recipients,
+    from,
+    subject,
+  })
+
+  const response = await fetch(resendUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from, to: recipients, subject, text }),
+    body: JSON.stringify(payload),
+  })
+
+  const raw = await response.text()
+  console.log('Resend response:', {
+    status: response.status,
+    ok: response.ok,
+    body: raw,
   })
 
   if (!response.ok) {
-    const detail = await response.text()
-    throw new Error(`Resend ${response.status}: ${detail}`)
+    throw new Error(`Resend ${response.status}: ${raw}`)
+  }
+
+  let parsed
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    parsed = null
+  }
+
+  if (parsed?.errors || (parsed?.message && !parsed?.id)) {
+    throw new Error(`Resend ${response.status}: ${raw}`)
   }
 }
 
