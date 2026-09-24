@@ -22,13 +22,30 @@ function PlayIcon() {
 }
 
 function GalleryThumb({ item }) {
+  const [posterFailed, setPosterFailed] = useState(false)
+
   if (item.media_type === 'video') {
     const poster = videoPosterUrl(item.media_url)
+    const showPoster = Boolean(poster) && !posterFailed
+
     return (
-      <span className="relative block bg-ink/10">
-        {poster ? (
-          <img src={poster} alt="" className="aspect-square w-full object-cover" />
-        ) : null}
+      <span className="relative block aspect-square bg-ink/10">
+        {showPoster ? (
+          <img
+            src={poster}
+            alt=""
+            className="h-full w-full object-cover"
+            onError={() => setPosterFailed(true)}
+          />
+        ) : (
+          <video
+            src={`${item.media_url}#t=0.1`}
+            muted
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover"
+          />
+        )}
         <span className="absolute inset-0 flex items-center justify-center bg-ink/35">
           <PlayIcon />
         </span>

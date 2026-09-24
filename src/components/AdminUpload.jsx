@@ -26,9 +26,11 @@ function captureVideoPoster(file) {
     const objectUrl = URL.createObjectURL(file)
     video.src = objectUrl
 
+    let timer
     const cleanup = (blob) => {
       if (video.dataset.done === '1') return
       video.dataset.done = '1'
+      window.clearTimeout(timer)
       URL.revokeObjectURL(objectUrl)
       resolve(blob)
     }
@@ -56,7 +58,7 @@ function captureVideoPoster(file) {
       },
       { once: true },
     )
-    window.setTimeout(() => cleanup(null), 8000)
+    timer = window.setTimeout(() => cleanup(null), 30000)
   })
 }
 
@@ -172,6 +174,7 @@ function AdminUpload({ onUploaded }) {
       await uploadWithProgress(file, objectPath, setProgress)
       setProgress(100)
 
+      let posterMissing = false
       if (mediaType === 'video') {
         const poster = await captureVideoPoster(file)
         const posterPath = videoPosterPath(objectPath)
@@ -184,7 +187,10 @@ function AdminUpload({ onUploaded }) {
             })
           if (posterError) {
             console.error('portfolio poster:', posterError.message)
+            posterMissing = true
           }
+        } else {
+          posterMissing = true
         }
       }
 
@@ -208,7 +214,11 @@ function AdminUpload({ onUploaded }) {
       }
 
       resetForm()
-      setSuccess('Uploaded. You can add another.')
+      setSuccess(
+        posterMissing
+          ? 'Uploaded, but the preview still didn’t generate. The tile may stay blank until a poster is added.'
+          : 'Uploaded. You can add another.',
+      )
       onUploaded?.()
     } catch (uploadError) {
       setError(uploadError.message || 'Upload failed. Try again.')

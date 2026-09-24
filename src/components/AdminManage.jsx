@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { storagePathFromPublicUrl, videoPosterPath } from '../lib/portfolioMedia'
+import { storagePathFromPublicUrl, videoPosterPath, videoPosterUrl } from '../lib/portfolioMedia'
 import { supabase } from '../lib/supabaseClient'
 
 function AdminManage({ refreshKey = 0 }) {
@@ -104,12 +104,10 @@ function AdminManage({ refreshKey = 0 }) {
               className="overflow-hidden rounded-lg border border-brand/20 bg-brandTint"
             >
               {item.media_type === 'video' ? (
-                <video
-                  src={item.media_url}
-                  muted
-                  playsInline
-                  preload="metadata"
-                  className="h-40 w-full object-cover"
+                <img
+                  src={videoPosterUrl(item.media_url) || item.media_url}
+                  alt={item.title || 'Portfolio video'}
+                  className="h-40 w-full bg-ink/10 object-cover"
                 />
               ) : (
                 <img
