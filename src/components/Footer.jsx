@@ -44,6 +44,16 @@ function Footer() {
           Licensed & Insured | Serving Hillsborough, Pinellas, Manatee, Polk,
           and Pasco counties
         </p>
+        <p className="mt-2 text-sm text-brandTint/60">
+          <a
+            href="https://digitaldynamicsolution.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-white"
+          >
+            Site by DDS
+          </a>
+        </p>
       </div>
     </footer>
   )
