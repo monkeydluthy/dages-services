@@ -10,6 +10,11 @@ create table leads (
   is_emergency boolean not null default false,
   status text not null default 'new',
   source text not null default 'landing_page',
+  utm_source text,
+  utm_medium text,
+  utm_campaign text,
+  referrer text,
+  landing_path text,
   photo_urls text[]
 );
 
@@ -20,6 +25,8 @@ alter table leads enable row level security;
 
 create policy "public insert only"
   on leads for insert to anon with check (true);
+
+grant insert on table public.leads to anon;
 
 drop policy if exists "authenticated read leads" on leads;
 create policy "authenticated read leads"

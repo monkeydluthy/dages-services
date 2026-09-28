@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import siteConfig from '../config/siteConfig.json'
-import { supabase } from '../lib/supabaseClient'
+import { getLeadAttribution } from '../lib/leadAttribution'
+import { publicSupabase } from '../lib/supabaseClient'
 
 const PHONE_PATTERN = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/
 const EMERGENCY_JOBS = new Set(['Storm cleanup', 'Hazardous removal'])
@@ -39,7 +40,9 @@ function LeadForm({ id = 'lead-form', plain = false }) {
 
     setSubmitting(true)
 
-    const { error: insertError } = await supabase.from('leads').insert({
+    const attribution = getLeadAttribution()
+
+    const { error: insertError } = await publicSupabase.from('leads').insert({
       id: leadId,
       name: name.trim(),
       phone: phone.trim(),
@@ -49,6 +52,11 @@ function LeadForm({ id = 'lead-form', plain = false }) {
       notes: notes.trim() || null,
       is_emergency: isEmergency,
       source: 'landing_page',
+      utm_source: attribution.utm_source,
+      utm_medium: attribution.utm_medium,
+      utm_campaign: attribution.utm_campaign,
+      referrer: attribution.referrer,
+      landing_path: attribution.landing_path,
     })
 
     setSubmitting(false)

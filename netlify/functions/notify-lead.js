@@ -37,6 +37,8 @@ export async function handler(event) {
   }
 
   const subjectPrefix = lead.is_emergency ? '🚨 EMERGENCY LEAD' : 'New lead'
+  const display = (value) =>
+    value && String(value).trim() ? String(value).trim() : '(none)'
 
   await notifyChannels({
     email: {
@@ -44,7 +46,10 @@ export async function handler(event) {
       text: `${lead.name} – ${lead.phone} – ${lead.email}
 Job: ${lead.job_type}
 Urgency: ${lead.urgency}
-Notes: ${lead.notes || '(none)'}`,
+Notes: ${lead.notes || '(none)'}
+Source: ${display(lead.utm_source)} / ${display(lead.utm_medium)} / ${display(lead.utm_campaign)}
+Referrer: ${display(lead.referrer)}
+Landing page: ${display(lead.landing_path)}`,
     },
     push: {
       title: subjectPrefix,
