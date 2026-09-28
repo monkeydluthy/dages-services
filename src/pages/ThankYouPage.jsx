@@ -3,10 +3,12 @@ import { Link, useSearchParams } from 'react-router-dom'
 import CustomerPhotoUpload from '../components/CustomerPhotoUpload'
 import Footer from '../components/Footer'
 import siteConfig from '../config/siteConfig.json'
+import useNoIndex from '../hooks/useNoIndex'
 
 function ThankYouPage() {
   const [searchParams] = useSearchParams()
   const leadId = searchParams.get('lead_id') ?? ''
+  useNoIndex()
 
   useEffect(() => {
     window.scrollTo(0, 0)

@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
 import StickyCallButton from './components/StickyCallButton'
+import useNoIndex from './hooks/useNoIndex'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminLogin from './pages/AdminLogin'
 import LandingPage from './pages/LandingPage'
@@ -10,6 +11,7 @@ import ThankYouPage from './pages/ThankYouPage'
 function AppShell() {
   const { pathname } = useLocation()
   const isAdmin = pathname.startsWith('/admin')
+  useNoIndex(isAdmin)
 
   return (
     <>
