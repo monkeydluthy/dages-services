@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /admin/login
 Disallow: /thank-you
 
-Sitemap: https://dages-services.netlify.app/sitemap.xml
+Sitemap: https://dagesservices.com/sitemap.xml
