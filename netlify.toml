@@ -3,6 +3,9 @@
   publish = "dist"
   functions = "netlify/functions"
 
+[functions."seo-snapshot"]
+  schedule = "@weekly"
+
 [[redirects]]
   from = "/"
   to = "/index.html"
