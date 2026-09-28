@@ -1,9 +1,13 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { videoPosterUrl } from '../lib/portfolioMedia'
+import { itemPosterUrl } from '../lib/portfolioMedia'
 import { supabase } from '../lib/supabaseClient'
 
 const PAGE_SIZE = 8
 const ITEM_LIMIT = 24
+const PORTFOLIO_SELECT =
+  'id, title, media_type, media_url, sort_order, created_at, width, height, poster_url, alt_text'
+const PORTFOLIO_SELECT_BASIC =
+  'id, title, media_type, media_url, sort_order, created_at'
 
 function chunkItems(items, size) {
   const pages = []
@@ -23,9 +27,12 @@ function PlayIcon() {
 
 function GalleryThumb({ item }) {
   const [posterFailed, setPosterFailed] = useState(false)
+  const alt = item.alt_text || item.title || 'Recent work'
+  const width = item.width || undefined
+  const height = item.height || undefined
 
   if (item.media_type === 'video') {
-    const poster = videoPosterUrl(item.media_url)
+    const poster = itemPosterUrl(item)
     const showPoster = Boolean(poster) && !posterFailed
 
     return (
@@ -33,7 +40,10 @@ function GalleryThumb({ item }) {
         {showPoster ? (
           <img
             src={poster}
-            alt=""
+            alt={alt}
+            width={width}
+            height={height}
+            loading="lazy"
             className="h-full w-full object-cover"
             onError={() => setPosterFailed(true)}
           />
@@ -42,7 +52,9 @@ function GalleryThumb({ item }) {
             src={`${item.media_url}#t=0.1`}
             muted
             playsInline
-            preload="metadata"
+            preload="none"
+            width={width}
+            height={height}
             className="h-full w-full object-cover"
           />
         )}
@@ -53,7 +65,16 @@ function GalleryThumb({ item }) {
     )
   }
 
-  return <img src={item.media_url} alt="" className="aspect-square w-full object-cover" />
+  return (
+    <img
+      src={item.media_url}
+      alt={alt}
+      width={width}
+      height={height}
+      loading="lazy"
+      className="aspect-square w-full object-cover"
+    />
+  )
 }
 
 function CloseIcon() {
@@ -99,7 +120,7 @@ function GalleryLightbox({ items, index, onClose, onChange }) {
   const item = items[index]
   const hasPrev = index > 0
   const hasNext = index < items.length - 1
-  const alt = item?.title || 'Recent work'
+  const alt = item?.alt_text || item?.title || 'Recent work'
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -173,16 +194,19 @@ function GalleryLightbox({ items, index, onClose, onChange }) {
           <video
             key={item.id}
             src={item.media_url}
-            poster={videoPosterUrl(item.media_url) || undefined}
+            poster={itemPosterUrl(item) || undefined}
             controls
             autoPlay
             playsInline
+            preload="none"
             className="max-h-[80vh] w-full rounded-lg bg-ink object-contain"
           />
         ) : (
           <img
             src={item.media_url}
             alt={alt}
+            width={item.width || undefined}
+            height={item.height || undefined}
             className="mx-auto max-h-[80vh] w-auto max-w-full rounded-lg object-contain"
           />
         )}
@@ -208,13 +232,27 @@ function PortfolioGallery() {
 
     supabase
       .from('portfolio_items')
-      .select('id, title, media_type, media_url, sort_order, created_at')
+      .select(PORTFOLIO_SELECT)
       .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false })
       .limit(ITEM_LIMIT)
-      .then(({ data, error }) => {
+      .then(async ({ data, error }) => {
         if (cancelled) return
-        setItems(error ? [] : (data ?? []))
+        if (!error) {
+          setItems(data ?? [])
+          setReady(true)
+          return
+        }
+
+        const fallback = await supabase
+          .from('portfolio_items')
+          .select(PORTFOLIO_SELECT_BASIC)
+          .order('sort_order', { ascending: true })
+          .order('created_at', { ascending: false })
+          .limit(ITEM_LIMIT)
+
+        if (cancelled) return
+        setItems(fallback.error ? [] : (fallback.data ?? []))
         setReady(true)
       })
 
@@ -300,7 +338,7 @@ function PortfolioGallery() {
                         type="button"
                         onClick={() => setViewerIndex(itemIndex)}
                         className="block w-full text-left hover:opacity-90"
-                        aria-label={`Open ${item.title || 'recent work'}`}
+                        aria-label={`Open ${item.alt_text || item.title || 'recent work'}`}
                       >
                         <GalleryThumb item={item} />
                       </button>

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import siteConfig from '../config/siteConfig.json'
+import { compressImageFile, defaultAltText } from '../lib/compressImage'
 import { videoPosterPath } from '../lib/portfolioMedia'
 import { supabase } from '../lib/supabaseClient'
 
@@ -27,12 +28,12 @@ function captureVideoPoster(file) {
     video.src = objectUrl
 
     let timer
-    const cleanup = (blob) => {
+    const cleanup = (blob, width = 0, height = 0) => {
       if (video.dataset.done === '1') return
       video.dataset.done = '1'
       window.clearTimeout(timer)
       URL.revokeObjectURL(objectUrl)
-      resolve(blob)
+      resolve({ blob, width, height })
     }
 
     const capture = () => {
@@ -46,7 +47,7 @@ function captureVideoPoster(file) {
       canvas.width = Math.max(1, Math.round(video.videoWidth * scale))
       canvas.height = Math.max(1, Math.round(video.videoHeight * scale))
       canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height)
-      canvas.toBlob((blob) => cleanup(blob), 'image/jpeg', 0.82)
+      canvas.toBlob((blob) => cleanup(blob, video.videoWidth, video.videoHeight), 'image/jpeg', 0.82)
     }
 
     video.addEventListener('error', () => cleanup(null), { once: true })
@@ -165,29 +166,46 @@ function AdminUpload({ onUploaded }) {
       return
     }
 
-    const objectPath = `${crypto.randomUUID()}/${sanitizeFileName(file.name)}`
-
     setSubmitting(true)
     setProgress(0)
 
     try {
-      await uploadWithProgress(file, objectPath, setProgress)
+      let uploadFile = file
+      let width = null
+      let height = null
+      let posterUrl = null
+
+      if (mediaType === 'image') {
+        const compressed = await compressImageFile(file)
+        uploadFile = compressed.file
+        width = compressed.width
+        height = compressed.height
+      }
+
+      const objectPath = `${crypto.randomUUID()}/${sanitizeFileName(uploadFile.name)}`
+
+      await uploadWithProgress(uploadFile, objectPath, setProgress)
       setProgress(100)
 
       let posterMissing = false
       if (mediaType === 'video') {
         const poster = await captureVideoPoster(file)
         const posterPath = videoPosterPath(objectPath)
-        if (poster && posterPath) {
+        if (poster.blob && posterPath) {
           const { error: posterError } = await supabase.storage
             .from('portfolio-media')
-            .upload(posterPath, poster, {
+            .upload(posterPath, poster.blob, {
               contentType: 'image/jpeg',
               upsert: true,
             })
           if (posterError) {
             console.error('portfolio poster:', posterError.message)
             posterMissing = true
+          } else {
+            width = poster.width || null
+            height = poster.height || null
+            posterUrl = supabase.storage.from('portfolio-media').getPublicUrl(posterPath)
+              .data.publicUrl
           }
         } else {
           posterMissing = true
@@ -203,6 +221,10 @@ function AdminUpload({ onUploaded }) {
         media_type: mediaType,
         media_url: publicData.publicUrl,
         job_type: jobType || null,
+        width,
+        height,
+        poster_url: posterUrl,
+        alt_text: defaultAltText(title, jobType),
       })
 
       if (insertError) {
@@ -210,7 +232,11 @@ function AdminUpload({ onUploaded }) {
         await supabase.storage
           .from('portfolio-media')
           .remove([objectPath, ...extras.filter(Boolean)])
-        throw new Error('File uploaded but saving the row failed. Try again.')
+        throw new Error(
+          insertError.message?.includes('width') || insertError.message?.includes('alt_text')
+            ? 'Run the portfolio media SQL in Supabase first, then try again.'
+            : 'File uploaded but saving the row failed. Try again.',
+        )
       }
 
       resetForm()
@@ -231,7 +257,8 @@ function AdminUpload({ onUploaded }) {
     <section className="rounded-lg border border-brand/20 bg-white p-6 shadow-sm">
       <h2 className="mb-1 text-xl font-bold text-ink">Add to portfolio</h2>
       <p className="mb-6 text-sm text-ink/70">
-        One photo or video at a time. Title and job type are optional.
+        One photo or video at a time. Photos are resized and saved as WebP before
+        they go up. Title and job type are optional.
       </p>
       <form className="grid gap-4" onSubmit={handleSubmit}>
         <label className="block">

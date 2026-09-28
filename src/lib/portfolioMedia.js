@@ -18,3 +18,8 @@ export function videoPosterUrl(mediaUrl) {
   if (!objectPath || !posterPath) return ''
   return mediaUrl.split('?')[0].replace(objectPath, posterPath)
 }
+
+export function itemPosterUrl(item) {
+  if (item?.poster_url) return item.poster_url
+  return videoPosterUrl(item?.media_url)
+}

@@ -9,7 +9,11 @@ create table if not exists portfolio_items (
   media_type text not null,
   media_url text not null,
   job_type text,
-  sort_order int not null default 0
+  sort_order int not null default 0,
+  width int,
+  height int,
+  poster_url text,
+  alt_text text
 );
 
 alter table portfolio_items enable row level security;
@@ -33,3 +37,9 @@ create policy "authenticated update"
 drop policy if exists "authenticated delete" on portfolio_items;
 create policy "authenticated delete"
   on portfolio_items for delete to authenticated using (true);
+
+alter table portfolio_items
+  add column if not exists width int,
+  add column if not exists height int,
+  add column if not exists poster_url text,
+  add column if not exists alt_text text;
