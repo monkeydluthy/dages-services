@@ -4,23 +4,45 @@ import siteConfig from '../config/siteConfig.json'
 import heroVideo from '../assets/video/hero-bg.mp4'
 
 const HERO_POSTER = '/hero-poster.jpg'
+const DESKTOP_BREAKPOINT = '(min-width: 768px)'
 
-function useMdUp() {
-  const [matches, setMatches] = useState(false)
+function canPlayHeroVideo() {
+  if (typeof window === 'undefined') return false
+  if (!window.matchMedia(DESKTOP_BREAKPOINT).matches) return false
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false
+  if (navigator.connection?.saveData) return false
+  return true
+}
+
+function useHeroVideo() {
+  const [showVideo, setShowVideo] = useState(false)
 
   useEffect(() => {
-    const media = window.matchMedia('(min-width: 768px)')
-    const update = () => setMatches(media.matches)
+    const desktop = window.matchMedia(DESKTOP_BREAKPOINT)
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const connection = navigator.connection
+
+    const update = () => {
+      setShowVideo(canPlayHeroVideo())
+    }
+
     update()
-    media.addEventListener('change', update)
-    return () => media.removeEventListener('change', update)
+    desktop.addEventListener('change', update)
+    reduceMotion.addEventListener('change', update)
+    connection?.addEventListener?.('change', update)
+
+    return () => {
+      desktop.removeEventListener('change', update)
+      reduceMotion.removeEventListener('change', update)
+      connection?.removeEventListener?.('change', update)
+    }
   }, [])
 
-  return matches
+  return showVideo
 }
 
 function Hero() {
-  const showVideo = useMdUp()
+  const showVideo = useHeroVideo()
 
   return (
     <section className="relative text-brandTint">
