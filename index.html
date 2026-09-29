@@ -24,6 +24,25 @@
     <meta name="theme-color" content="#1F5133" />
     <link rel="manifest" href="/manifest.json" />
     <title>Dages Services, LLC</title>
+    <style>
+      #hero-lcp {
+        position: absolute;
+        top: 4rem;
+        left: 0;
+        z-index: 0;
+        width: 100%;
+        height: 75rem;
+        object-fit: cover;
+        pointer-events: none;
+      }
+      #hero-lcp[hidden] {
+        display: none;
+      }
+      #root {
+        position: relative;
+        z-index: 1;
+      }
+    </style>
     <!-- Swap Outfit / Source Sans 3 when brand fonts are chosen. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,6 +52,15 @@
     />
   </head>
   <body>
+    <img
+      id="hero-lcp"
+      src="/hero-poster.jpg"
+      alt=""
+      width="1024"
+      height="576"
+      fetchpriority="high"
+      decoding="async"
+    />
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

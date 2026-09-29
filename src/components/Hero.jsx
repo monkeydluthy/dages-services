@@ -32,19 +32,12 @@ function Hero() {
             loop
             playsInline
             poster={HERO_POSTER}
+            preload="none"
             className="absolute inset-0 h-full w-full object-cover"
           >
             <source src={heroVideo} type="video/mp4" />
           </video>
-        ) : (
-          <img
-            src={HERO_POSTER}
-            alt=""
-            fetchPriority="high"
-            decoding="async"
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        )}
+        ) : null}
         <div className="absolute inset-0 bg-brand/80" />
       </div>
       <div className="relative z-10 mx-auto grid max-w-6xl gap-8 px-4 py-10 md:grid-cols-2 md:items-center md:gap-20 md:py-16">

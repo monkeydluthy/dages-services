@@ -19,6 +19,11 @@ function AppShell() {
     captureLeadAttribution()
   }, [pathname])
 
+  useEffect(() => {
+    const poster = document.getElementById('hero-lcp')
+    if (poster) poster.hidden = pathname !== '/'
+  }, [pathname])
+
   return (
     <>
       {isAdmin ? null : <Header />}
