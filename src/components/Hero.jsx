@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import LeadForm from './LeadForm'
 import siteConfig from '../config/siteConfig.json'
-import heroPoster from '../assets/img/hero-poster.jpg'
 import heroVideo from '../assets/video/hero-bg.mp4'
+
+const HERO_POSTER = '/hero-poster.jpg'
 
 function useMdUp() {
   const [matches, setMatches] = useState(false)
@@ -30,15 +31,17 @@ function Hero() {
             muted
             loop
             playsInline
-            poster={heroPoster}
+            poster={HERO_POSTER}
             className="absolute inset-0 h-full w-full object-cover"
           >
             <source src={heroVideo} type="video/mp4" />
           </video>
         ) : (
           <img
-            src={heroPoster}
+            src={HERO_POSTER}
             alt=""
+            fetchPriority="high"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
           />
         )}
