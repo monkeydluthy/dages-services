@@ -11,7 +11,6 @@ import ServiceCards from '../components/ServiceCards'
 import TrustBar from '../components/TrustBar'
 import WhenVisible from '../components/WhenVisible'
 import siteConfig from '../config/siteConfig.json'
-import useGoogleReviews from '../hooks/useGoogleReviews'
 
 const GoogleReviewsCarousel = lazy(() => import('../components/GoogleReviewsCarousel'))
 const PortfolioGallery = lazy(() => import('../components/PortfolioGallery'))
@@ -92,15 +91,13 @@ function InfoCard({ icon, label, value, subtext, href }) {
 }
 
 function LandingPage() {
-  const reviews = useGoogleReviews()
-
   return (
     <main>
       <Hero />
-      <TrustBar reviews={reviews} />
+      <TrustBar />
       <WhenVisible fallback={<div className="min-h-[16rem]" aria-hidden="true" />}>
         <Suspense fallback={<ChunkFallback />}>
-          <GoogleReviewsCarousel data={reviews} />
+          <GoogleReviewsCarousel />
         </Suspense>
       </WhenVisible>
       <ServiceCards />

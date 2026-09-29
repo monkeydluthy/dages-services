@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-function WhenVisible({ children, fallback = null, rootMargin = '400px' }) {
+function WhenVisible({ children, fallback = null, rootMargin = '120px' }) {
   const ref = useRef(null)
   const [visible, setVisible] = useState(false)
 

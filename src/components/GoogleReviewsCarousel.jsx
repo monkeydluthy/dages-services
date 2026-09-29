@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import useGoogleReviews from '../hooks/useGoogleReviews'
 import StarRating from './StarRating'
 
 function useVisibleCards() {
@@ -41,7 +42,8 @@ function ReviewCard({ review }) {
   )
 }
 
-function GoogleReviewsCarousel({ data }) {
+function GoogleReviewsCarousel() {
+  const data = useGoogleReviews()
   const reviews = data?.reviews?.slice(0, 5) ?? []
   const visible = useVisibleCards()
   const maxIndex = Math.max(0, reviews.length - visible)
