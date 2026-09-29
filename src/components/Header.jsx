@@ -7,7 +7,7 @@ function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex min-w-0 items-center gap-2.5">
           <img
-            src="/header-icon.png"
+            src="/header-icon.webp"
             alt=""
             width="48"
             height="48"

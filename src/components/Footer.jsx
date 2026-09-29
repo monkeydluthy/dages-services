@@ -9,7 +9,7 @@ function Footer() {
       <div className="mx-auto max-w-5xl px-4 py-10 text-center">
         <p className="flex items-center justify-center gap-2.5">
           <img
-            src="/header-icon.png"
+            src="/header-icon.webp"
             alt=""
             width="48"
             height="48"

@@ -3,7 +3,7 @@ import LeadForm from './LeadForm'
 import siteConfig from '../config/siteConfig.json'
 import heroVideo from '../assets/video/hero-bg.mp4'
 
-const HERO_POSTER = '/hero-poster.jpg'
+const HERO_POSTER = '/hero-poster.webp'
 const DESKTOP_BREAKPOINT = '(min-width: 768px)'
 
 function canPlayHeroVideo() {

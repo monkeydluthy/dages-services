@@ -19,12 +19,24 @@ function AdminManage({ refreshKey = 0 }) {
 
       const { data, error: queryError } = await supabase
         .from('portfolio_items')
-        .select('id, title, media_type, media_url, job_type, created_at, alt_text, poster_url, width, height')
+        .select('id, title, media_type, media_url, original_media_url, job_type, created_at, alt_text, poster_url, width, height')
         .order('created_at', { ascending: false })
 
       if (cancelled) return
 
       if (queryError) {
+        const withMeta = await supabase
+          .from('portfolio_items')
+          .select('id, title, media_type, media_url, job_type, created_at, alt_text, poster_url, width, height')
+          .order('created_at', { ascending: false })
+
+        if (!withMeta.error) {
+          if (cancelled) return
+          setItems(withMeta.data ?? [])
+          setLoading(false)
+          return
+        }
+
         const fallback = await supabase
           .from('portfolio_items')
           .select('id, title, media_type, media_url, job_type, created_at')
@@ -61,8 +73,9 @@ function AdminManage({ refreshKey = 0 }) {
     setError('')
 
     const path = storagePathFromPublicUrl(item.media_url)
-    if (path) {
-      const toRemove = [path]
+    const originalPath = storagePathFromPublicUrl(item.original_media_url || '')
+    if (path || originalPath) {
+      const toRemove = [path, originalPath].filter(Boolean)
       const posterPath = item.media_type === 'video' ? videoPosterPath(path) : null
       if (posterPath) toRemove.push(posterPath)
 

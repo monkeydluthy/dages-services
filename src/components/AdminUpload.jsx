@@ -78,6 +78,7 @@ function uploadWithProgress(file, objectPath, onProgress) {
       xhr.setRequestHeader('Authorization', `Bearer ${token}`)
       xhr.setRequestHeader('apikey', import.meta.env.VITE_SUPABASE_ANON_KEY)
       xhr.setRequestHeader('x-upsert', 'false')
+      xhr.setRequestHeader('cache-control', '31536000')
       if (file.type) {
         xhr.setRequestHeader('Content-Type', file.type)
       }
@@ -196,6 +197,7 @@ function AdminUpload({ onUploaded }) {
             .from('portfolio-media')
             .upload(posterPath, poster.blob, {
               contentType: 'image/jpeg',
+              cacheControl: '31536000',
               upsert: true,
             })
           if (posterError) {
