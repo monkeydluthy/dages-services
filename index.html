@@ -79,6 +79,26 @@
       decoding="async"
     />
     <div id="root"></div>
+    <script>
+      (function () {
+        function loadBodyFonts() {
+          if (document.getElementById('source-sans-3')) return
+          var link = document.createElement('link')
+          link.id = 'source-sans-3'
+          link.rel = 'stylesheet'
+          link.href = '/fonts/source-sans-3.css'
+          link.fetchPriority = 'low'
+          document.head.appendChild(link)
+        }
+        var poster = document.getElementById('hero-lcp')
+        if (poster && !poster.complete) {
+          poster.addEventListener('load', loadBodyFonts, { once: true })
+          poster.addEventListener('error', loadBodyFonts, { once: true })
+        } else {
+          loadBodyFonts()
+        }
+      })()
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
