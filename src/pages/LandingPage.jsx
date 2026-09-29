@@ -1,16 +1,20 @@
+import { lazy, Suspense } from 'react'
+import ChunkFallback from '../components/ChunkFallback'
 import FAQ from '../components/FAQ'
 import FinancingBadge from '../components/FinancingBadge'
 import Footer from '../components/Footer'
-import GoogleReviewsCarousel from '../components/GoogleReviewsCarousel'
 import Hero from '../components/Hero'
 import LeadForm from '../components/LeadForm'
 import OwnerBio from '../components/OwnerBio'
-import PortfolioGallery from '../components/PortfolioGallery'
 import ServiceArea from '../components/ServiceArea'
 import ServiceCards from '../components/ServiceCards'
 import TrustBar from '../components/TrustBar'
+import WhenVisible from '../components/WhenVisible'
 import siteConfig from '../config/siteConfig.json'
 import useGoogleReviews from '../hooks/useGoogleReviews'
+
+const GoogleReviewsCarousel = lazy(() => import('../components/GoogleReviewsCarousel'))
+const PortfolioGallery = lazy(() => import('../components/PortfolioGallery'))
 
 const iconClass = 'mx-auto h-7 w-7 text-brandTint'
 const areaCities = siteConfig.cities.slice(0, 4).join(', ')
@@ -94,12 +98,20 @@ function LandingPage() {
     <main>
       <Hero />
       <TrustBar reviews={reviews} />
-      <GoogleReviewsCarousel data={reviews} />
+      <WhenVisible fallback={<div className="min-h-[16rem]" aria-hidden="true" />}>
+        <Suspense fallback={<ChunkFallback />}>
+          <GoogleReviewsCarousel data={reviews} />
+        </Suspense>
+      </WhenVisible>
       <ServiceCards />
       <FinancingBadge />
       <ServiceArea />
       <FAQ />
-      <PortfolioGallery />
+      <WhenVisible fallback={<div className="min-h-[24rem]" aria-hidden="true" />}>
+        <Suspense fallback={<ChunkFallback />}>
+          <PortfolioGallery />
+        </Suspense>
+      </WhenVisible>
       <OwnerBio />
       <section className="bg-brand px-4 py-12 sm:py-16">
         <div className="mx-auto max-w-6xl">

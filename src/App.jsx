@@ -1,14 +1,16 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import ChunkFallback from './components/ChunkFallback'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
 import StickyCallButton from './components/StickyCallButton'
 import useNoIndex from './hooks/useNoIndex'
 import { captureLeadAttribution } from './lib/leadAttribution'
-import AdminDashboard from './pages/AdminDashboard'
-import AdminLogin from './pages/AdminLogin'
 import LandingPage from './pages/LandingPage'
-import ThankYouPage from './pages/ThankYouPage'
+
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
+const AdminLogin = lazy(() => import('./pages/AdminLogin'))
+const ThankYouPage = lazy(() => import('./pages/ThankYouPage'))
 
 function AppShell() {
   const { pathname } = useLocation()
@@ -28,19 +30,21 @@ function AppShell() {
     <>
       {isAdmin ? null : <Header />}
       <div className={isAdmin ? undefined : 'pb-14 md:pb-0'}>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/thank-you" element={<ThankYouPage />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute>
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <Suspense fallback={<ChunkFallback />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/thank-you" element={<ThankYouPage />} />
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Suspense>
       </div>
       {isAdmin ? null : <StickyCallButton />}
     </>
