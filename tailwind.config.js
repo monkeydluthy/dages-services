@@ -10,8 +10,22 @@ export default {
       },
       fontFamily: {
         // Brand fonts not chosen yet — swap these two stacks in one place.
-        display: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        sans: ['"Source Sans 3"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: [
+          'Outfit',
+          'Outfit Fallback',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'sans-serif',
+        ],
+        sans: [
+          '"Source Sans 3"',
+          '"Source Sans 3 Fallback"',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          '"Segoe UI"',
+          'sans-serif',
+        ],
       },
     },
   },

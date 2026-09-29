@@ -25,6 +25,21 @@
     <link rel="manifest" href="/manifest.json" />
     <title>Dages Services, LLC</title>
     <style>
+      @font-face {
+        font-family: 'Outfit';
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url('/fonts/outfit-700-latin.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Outfit Fallback';
+        src: local('Arial');
+        size-adjust: 133.44%;
+        ascent-override: 74.9%;
+        descent-override: 19.5%;
+        line-gap-override: 0%;
+      }
       #hero-lcp {
         position: absolute;
         top: 4rem;
@@ -45,11 +60,12 @@
     </style>
     <!-- Swap Outfit / Source Sans 3 when brand fonts are chosen. -->
     <link rel="preconnect" href="https://xdqkpkicoorhweqgzubb.supabase.co" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="/fonts/outfit-700-latin.woff2"
+      crossorigin
     />
   </head>
   <body>
