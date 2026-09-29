@@ -90,12 +90,19 @@
           link.fetchPriority = 'low'
           document.head.appendChild(link)
         }
+        function scheduleBodyFonts() {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadBodyFonts)
+          } else {
+            setTimeout(loadBodyFonts, 0)
+          }
+        }
         var poster = document.getElementById('hero-lcp')
         if (poster && !poster.complete) {
-          poster.addEventListener('load', loadBodyFonts, { once: true })
-          poster.addEventListener('error', loadBodyFonts, { once: true })
+          poster.addEventListener('load', scheduleBodyFonts, { once: true })
+          poster.addEventListener('error', scheduleBodyFonts, { once: true })
         } else {
-          loadBodyFonts()
+          scheduleBodyFonts()
         }
       })()
     </script>
