@@ -6,6 +6,7 @@ import Footer from '../components/Footer'
 import Hero from '../components/Hero'
 import LeadForm from '../components/LeadForm'
 import OwnerBio from '../components/OwnerBio'
+import SEO, { HOME_SEO } from '../components/SEO'
 import ServiceArea from '../components/ServiceArea'
 import ServiceCards from '../components/ServiceCards'
 import TrustBar from '../components/TrustBar'
@@ -93,6 +94,7 @@ function InfoCard({ icon, label, value, subtext, href }) {
 function LandingPage() {
   return (
     <main>
+      <SEO title={HOME_SEO.title} description={HOME_SEO.description} />
       <Hero />
       <TrustBar />
       <WhenVisible fallback={<div className="min-h-[16rem]" aria-hidden="true" />}>
