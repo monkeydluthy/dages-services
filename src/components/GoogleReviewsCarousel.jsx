@@ -27,7 +27,7 @@ function ReviewCard({ review }) {
       <div className="mb-2 flex items-start justify-between gap-3">
         <p className="font-semibold text-ink">{review.authorName}</p>
         {review.relativeTime ? (
-          <p className="shrink-0 text-xs text-ink/50">{review.relativeTime}</p>
+          <p className="shrink-0 text-xs text-ink/70">{review.relativeTime}</p>
         ) : null}
       </div>
       <StarRating rating={review.rating} />

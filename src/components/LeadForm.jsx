@@ -106,7 +106,7 @@ function LeadForm({ id = 'lead-form', plain = false }) {
                 inputMode="tel"
                 value={phone}
                 onChange={(event) => setPhone(event.target.value)}
-                pattern="^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$"
+                pattern="^\(?\d{3}\)?[-. ]?\d{3}[-. ]?\d{4}$"
                 title="Use a 10-digit US phone number"
                 className={fieldClass}
               />
@@ -173,15 +173,17 @@ function LeadForm({ id = 'lead-form', plain = false }) {
               className={`${fieldClass} max-md:min-h-20`}
             />
           </label>
-          {error ? (
-            <p className="text-sm font-medium text-red-700" role="alert">
-              {error}
-            </p>
-          ) : null}
+          <div className="min-h-5" aria-live="polite">
+            {error ? (
+              <p className="text-sm font-medium text-red-700" role="alert">
+                {error}
+              </p>
+            ) : null}
+          </div>
           <button
             type="submit"
             disabled={submitting}
-            className="mt-2 w-full rounded-md bg-brand px-5 py-3 font-semibold text-brandTint hover:opacity-90 disabled:opacity-60 sm:w-auto"
+            className="mt-2 min-h-12 w-full rounded-md bg-brand px-5 py-3 font-semibold text-brandTint hover:opacity-90 disabled:opacity-60 sm:w-auto"
           >
             {submitting ? 'Sending…' : siteConfig.cta}
           </button>

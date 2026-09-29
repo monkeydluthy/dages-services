@@ -31,7 +31,11 @@ function StarRating({ rating, size = 'sm' }) {
   const value = Number(rating) || 0
 
   return (
-    <span className="inline-flex items-center gap-0.5" aria-label={`${value} out of 5 stars`}>
+    <span
+      className="inline-flex items-center gap-0.5"
+      role="img"
+      aria-label={`${value} out of 5 stars`}
+    >
       {Array.from({ length: 5 }, (_, index) => (
         <Star key={index} fill={value - index} sizeClass={sizeClass} />
       ))}

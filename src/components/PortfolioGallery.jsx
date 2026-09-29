@@ -25,19 +25,17 @@ function PlayIcon() {
   )
 }
 
-function GalleryThumb({ item }) {
-  const [posterFailed, setPosterFailed] = useState(false)
+function GalleryThumb({ item, onImageError }) {
   const alt = item.alt_text || item.title || 'Recent work'
   const width = item.width || undefined
   const height = item.height || undefined
 
   if (item.media_type === 'video') {
     const poster = itemPosterUrl(item)
-    const showPoster = Boolean(poster) && !posterFailed
 
     return (
       <span className="relative block aspect-square bg-ink/10">
-        {showPoster ? (
+        {poster ? (
           <img
             src={poster}
             alt={alt}
@@ -45,7 +43,7 @@ function GalleryThumb({ item }) {
             height={height}
             loading="lazy"
             className="h-full w-full object-cover"
-            onError={() => setPosterFailed(true)}
+            onError={onImageError}
           />
         ) : (
           <video
@@ -73,7 +71,26 @@ function GalleryThumb({ item }) {
       height={height}
       loading="lazy"
       className="aspect-square w-full object-cover"
+      onError={onImageError}
     />
+  )
+}
+
+function GalleryTile({ item, onOpen }) {
+  const [failed, setFailed] = useState(false)
+  if (failed) return null
+
+  return (
+    <li className="min-w-0 shrink-0 basis-[calc((100%-0.75rem)/2)] overflow-hidden rounded-lg bg-brandTint md:basis-[calc((100%-3rem)/4)]">
+      <button
+        type="button"
+        onClick={onOpen}
+        className="block w-full text-left hover:opacity-90"
+        aria-label={`Open ${item.alt_text || item.title || 'recent work'}`}
+      >
+        <GalleryThumb item={item} onImageError={() => setFailed(true)} />
+      </button>
+    </li>
   )
 }
 
@@ -330,19 +347,11 @@ function PortfolioGallery() {
                 {pageItems.map((item) => {
                   const itemIndex = items.findIndex((entry) => entry.id === item.id)
                   return (
-                    <li
+                    <GalleryTile
                       key={item.id}
-                      className="min-w-0 shrink-0 basis-[calc((100%-0.75rem)/2)] overflow-hidden rounded-lg bg-brandTint md:basis-[calc((100%-3rem)/4)]"
-                    >
-                      <button
-                        type="button"
-                        onClick={() => setViewerIndex(itemIndex)}
-                        className="block w-full text-left hover:opacity-90"
-                        aria-label={`Open ${item.alt_text || item.title || 'recent work'}`}
-                      >
-                        <GalleryThumb item={item} />
-                      </button>
-                    </li>
+                      item={item}
+                      onOpen={() => setViewerIndex(itemIndex)}
+                    />
                   )
                 })}
               </ul>

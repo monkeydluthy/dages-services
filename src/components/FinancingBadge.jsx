@@ -21,11 +21,15 @@ function FinancingBadge() {
       <img
         src={greenSkyLogoSrc}
         alt="GreenSky"
+        width={303}
+        height={80}
         className="h-10 w-auto object-contain"
       />
       <img
         src={ehlLogoSrc}
         alt="Equal Housing Lender"
+        width={150}
+        height={150}
         className="h-10 w-auto object-contain"
       />
     </div>
