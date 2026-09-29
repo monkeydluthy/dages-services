@@ -5,12 +5,8 @@ import {
   webhookAuthorized,
 } from '../lib/notify.js'
 
-function parseLead(event) {
-  const raw = event.isBase64Encoded
-    ? Buffer.from(event.body ?? '', 'base64').toString('utf8')
-    : event.body
-
-  const payload = typeof raw === 'string' ? JSON.parse(raw) : raw
+async function parseLead(request) {
+  const payload = await request.json()
   const lead = payload?.record
 
   if (!lead || typeof lead !== 'object') {
@@ -20,18 +16,18 @@ function parseLead(event) {
   return lead
 }
 
-export async function handler(event) {
-  if (event.httpMethod !== 'POST') {
+export default async (request) => {
+  if (request.method !== 'POST') {
     return json(405, { error: 'Method not allowed' })
   }
 
-  if (!webhookAuthorized(event)) {
+  if (!webhookAuthorized(request)) {
     return json(401, { error: 'Unauthorized' })
   }
 
   let lead
   try {
-    lead = parseLead(event)
+    lead = await parseLead(request)
   } catch {
     return json(400, { error: 'Bad payload' })
   }

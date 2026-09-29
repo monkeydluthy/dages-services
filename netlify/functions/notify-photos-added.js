@@ -13,12 +13,8 @@ function photosBelongToLead(lead, urls) {
   return urls.every((url) => typeof url === 'string' && url.length > 0 && have.has(url))
 }
 
-function parseBody(event) {
-  const raw = event.isBase64Encoded
-    ? Buffer.from(event.body ?? '', 'base64').toString('utf8')
-    : event.body
-
-  const payload = typeof raw === 'string' ? JSON.parse(raw || '{}') : raw
+async function parseBody(request) {
+  const payload = await request.json()
   if (!payload?.lead_id) {
     throw new Error('missing lead_id')
   }
@@ -46,14 +42,14 @@ async function loadLead(leadId) {
   return data
 }
 
-export async function handler(event) {
-  if (event.httpMethod !== 'POST') {
+export default async (request) => {
+  if (request.method !== 'POST') {
     return json(405, { error: 'Method not allowed' })
   }
 
   let payload
   try {
-    payload = parseBody(event)
+    payload = await parseBody(request)
   } catch {
     return json(400, { error: 'Bad payload' })
   }
@@ -66,7 +62,7 @@ export async function handler(event) {
   }
 
   const allowed =
-    webhookAuthorized(event) ||
+    webhookAuthorized(request) ||
     photoNotifyAuthorized(payload) ||
     photosBelongToLead(lead, payload.urls)
 

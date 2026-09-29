@@ -1,19 +1,17 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
 
-export function json(statusCode, body) {
-  return {
-    statusCode,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  }
+export function json(status, body, extraHeaders = {}) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      ...extraHeaders,
+    },
+  })
 }
 
-export function getHeader(event, name) {
-  const headers = event.headers ?? {}
-  const needle = name.toLowerCase()
-  const match = Object.entries(headers).find(([key]) => key.toLowerCase() === needle)
-  const value = match?.[1]
-  return Array.isArray(value) ? value[0] : value
+export function getHeader(request, name) {
+  return request.headers.get(name)
 }
 
 export function secretsMatch(provided, expected) {
@@ -24,8 +22,8 @@ export function secretsMatch(provided, expected) {
   return timingSafeEqual(a, b)
 }
 
-export function webhookAuthorized(event) {
-  return secretsMatch(getHeader(event, 'x-webhook-secret'), process.env.WEBHOOK_SECRET)
+export function webhookAuthorized(request) {
+  return secretsMatch(getHeader(request, 'x-webhook-secret'), process.env.WEBHOOK_SECRET)
 }
 
 export function photoNotifyToken(leadId, photoCount) {

@@ -25,24 +25,6 @@ async function run(req) {
 
 export default run
 
-export async function handler() {
-  try {
-    const result = await captureSeoSnapshot()
-    return {
-      statusCode: result.ok ? 200 : 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(result),
-    }
-  } catch (error) {
-    console.error('seo-snapshot failed:', error.message)
-    return {
-      statusCode: 500,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ok: false, error: error.message }),
-    }
-  }
-}
-
 export const config = {
   schedule: '@weekly',
 }

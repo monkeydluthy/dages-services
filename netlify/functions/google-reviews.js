@@ -3,15 +3,14 @@ const PLACE_ID_FALLBACK = 'ChIJRw7C8K0z3YgRnjTrItZ1M2g'
 
 let cache = { expiresAt: 0, payload: null }
 
-function json(statusCode, body, extraHeaders = {}) {
-  return {
-    statusCode,
+function json(status, body, extraHeaders = {}) {
+  return new Response(JSON.stringify(body), {
+    status,
     headers: {
       'Content-Type': 'application/json',
       ...extraHeaders,
     },
-    body: JSON.stringify(body),
-  }
+  })
 }
 
 function cacheHeaders() {
@@ -74,8 +73,8 @@ async function fetchPlaceDetails(placeId, apiKey) {
   return data.result
 }
 
-export async function handler(event) {
-  if (event.httpMethod && event.httpMethod !== 'GET') {
+export default async (request) => {
+  if (request.method && request.method !== 'GET') {
     return json(405, { error: 'Method not allowed' })
   }
 

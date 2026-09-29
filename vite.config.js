@@ -15,13 +15,15 @@ function googleReviewsDevPlugin(env) {
         process.env.GOOGLE_PLACES_API_KEY ||= env.GOOGLE_PLACES_API_KEY
         process.env.GOOGLE_PLACE_ID ||= env.GOOGLE_PLACE_ID
 
-        const { handler } = await import('./netlify/functions/google-reviews.js')
-        const result = await handler({ httpMethod: 'GET', headers: {} })
-        res.statusCode = result.statusCode
-        for (const [key, value] of Object.entries(result.headers ?? {})) {
+        const { default: reviews } = await import('./netlify/functions/google-reviews.js')
+        const result = await reviews(
+          new Request('http://localhost/.netlify/functions/google-reviews', { method: 'GET' }),
+        )
+        res.statusCode = result.status
+        result.headers.forEach((value, key) => {
           res.setHeader(key, value)
-        }
-        res.end(result.body)
+        })
+        res.end(await result.text())
       })
     },
   }
