@@ -41,7 +41,7 @@ function FAQ() {
     <section className="bg-brandTint">
       <div className="mx-auto max-w-5xl px-4 py-12 sm:py-16">
         <h2 className="mb-6 text-2xl font-bold text-ink sm:mb-8 sm:text-3xl">
-          Common questions
+          Tree Service Questions, Answered
         </h2>
         <div className="rounded-lg border border-brand/20 bg-white px-4 sm:px-6">
           {questions.map((item) => (

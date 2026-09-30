@@ -112,7 +112,9 @@ function Icon({ name }) {
 function ServiceCards() {
   return (
     <section className="mx-auto max-w-5xl px-4 py-12 sm:py-16">
-      <h2 className="mb-6 text-2xl font-bold text-ink sm:mb-8 sm:text-3xl">Services</h2>
+      <h2 className="mb-6 text-2xl font-bold text-ink sm:mb-8 sm:text-3xl">
+        Tree Services in Plant City & Tampa Bay
+      </h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {siteConfig.services.map((service) => (
           <article
