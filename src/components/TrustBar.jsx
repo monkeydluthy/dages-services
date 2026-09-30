@@ -11,7 +11,7 @@ function TrustBar({ reviews }) {
           showBadge ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2'
         }`}
       >
-        {siteConfig.trustItems.map((item) => (
+        {siteConfig.trustItems.concat(siteConfig.callbackPromiseLabel).map((item) => (
           <li
             key={item}
             className="flex items-center justify-center text-center text-base font-bold text-ink sm:text-lg"

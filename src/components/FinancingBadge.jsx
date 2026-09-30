@@ -4,13 +4,8 @@ function FinancingBadge() {
   const financing = siteConfig.financing
   if (!financing) return null
 
-  // Generic copy until Joe confirms GreenSky (or another program) is still the lender.
-  // To restore GreenSky: set showProvider to true, and in siteConfig.financing set
-  //   label: "Financing available through GreenSky"
-  //   placeholderLabel: "Financing available — ask about GreenSky"
-  //   applyUrl: "https://www.greensky.com/"
-  //   disclosureUrl: "https://www.greensky.com/disclosures"
-  const showProvider = false
+  // GreenSky is the confirmed program. Set false only if the lender changes.
+  const showProvider = true
 
   const {
     label,
