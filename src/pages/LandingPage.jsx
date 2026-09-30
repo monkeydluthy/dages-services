@@ -131,7 +131,7 @@ function LandingPage() {
                 label="Call Us"
                 value={siteConfig.phone}
                 href={`tel:${siteConfig.phone}`}
-                subtext={siteConfig.trustItems[2]}
+                subtext={siteConfig.callbackPromise}
               />
               <InfoCard
                 icon={<PinIcon />}

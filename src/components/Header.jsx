@@ -19,9 +19,10 @@ function Header() {
         </Link>
         <a
           href={`tel:${siteConfig.phone}`}
-          className="hidden rounded-md bg-brand px-4 py-2 text-sm font-semibold text-brandTint hover:opacity-90 md:inline-flex"
+          aria-label={`Call Now ${siteConfig.phone}`}
+          className="hidden rounded-md bg-brand px-5 py-2.5 text-base font-bold text-brandTint hover:opacity-90 md:inline-flex"
         >
-          {siteConfig.phone}
+          Call Now
         </a>
       </div>
     </header>

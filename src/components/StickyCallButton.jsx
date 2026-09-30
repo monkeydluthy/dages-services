@@ -3,7 +3,7 @@ import siteConfig from '../config/siteConfig.json'
 function PhoneIcon() {
   return (
     <svg
-      className="h-5 w-5"
+      className="h-6 w-6"
       viewBox="0 0 24 24"
       fill="currentColor"
       aria-hidden="true"
@@ -17,7 +17,7 @@ function StickyCallButton() {
   return (
     <a
       href={`tel:${siteConfig.phone}`}
-      className="fixed inset-x-0 bottom-0 z-40 flex h-14 items-center justify-center gap-2 bg-brand text-base font-semibold text-brandTint md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-center gap-2 bg-brand text-lg font-bold text-brandTint md:hidden"
     >
       <PhoneIcon />
       Call Now

@@ -19,8 +19,9 @@ function ThankYouPage() {
       <section className="mx-auto flex w-full max-w-3xl flex-1 flex-col justify-start px-4 pb-24 pt-10 text-center md:pt-16">
         <h1 className="mb-3 text-3xl font-bold text-ink sm:text-4xl">Thanks — we got it.</h1>
         <p className="mb-3 text-base text-ink/70 sm:text-lg">
-          We'll call you back shortly about the job. If you&apos;ve got a photo,
-          drop it below so we can see the tree before we follow up.
+          We'll call you back {siteConfig.callbackPromise} about the job. If
+          you&apos;ve got a photo, drop it below so we can see the tree before we
+          follow up.
         </p>
         <p className="mb-2 text-ink/80">
           Need us sooner? Call{' '}

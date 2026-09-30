@@ -12,12 +12,12 @@
   },
   "hero": {
     "headline": "Tree removal, trimming, and storm work — done right.",
-    "subheadline": "Tree removal, trimming, stump grinding, storm cleanup, and hazardous work — serving Plant City and the greater Tampa Bay area. Tell us the job and we'll follow up, usually within minutes."
+    "subheadline": "Tree removal, trimming, stump grinding, storm cleanup, and hazardous work — serving Plant City and the greater Tampa Bay area. Tell us the job and we'll follow up the same business day."
   },
+  "callbackPromise": "the same business day",
   "trustItems": [
-    "Licensed & insured",
-    "Family-run, based in Plant City",
-    "Minutes, not hours"
+    "Licensed & insured · Family-run, based in Plant City",
+    "the same business day"
   ],
   "urgencyOptions": [
     "Emergency — need someone today",
@@ -103,8 +103,8 @@
     "reviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJRw7C8K0z3YgRnjTrItZ1M2g"
   },
   "financing": {
-    "label": "Financing available through GreenSky",
-    "placeholderLabel": "Financing available — ask about GreenSky",
+    "label": "Financing available — ask about options",
+    "placeholderLabel": "Financing available — ask about options",
     "applyUrl": "https://www.greensky.com/",
     "disclosureUrl": "https://www.greensky.com/disclosures",
     "greenSkyLogoSrc": "/financing/greensky-logo.webp",

@@ -4,6 +4,14 @@ function FinancingBadge() {
   const financing = siteConfig.financing
   if (!financing) return null
 
+  // Generic copy until Joe confirms GreenSky (or another program) is still the lender.
+  // To restore GreenSky: set showProvider to true, and in siteConfig.financing set
+  //   label: "Financing available through GreenSky"
+  //   placeholderLabel: "Financing available — ask about GreenSky"
+  //   applyUrl: "https://www.greensky.com/"
+  //   disclosureUrl: "https://www.greensky.com/disclosures"
+  const showProvider = false
+
   const {
     label,
     placeholderLabel,
@@ -13,8 +21,10 @@ function FinancingBadge() {
     ehlLogoSrc,
   } = financing
 
-  const hasLogos = Boolean(greenSkyLogoSrc && ehlLogoSrc)
+  const hasLogos = showProvider && Boolean(greenSkyLogoSrc && ehlLogoSrc)
   const wording = hasLogos ? label : placeholderLabel
+  const providerApplyUrl = showProvider ? applyUrl : ''
+  const providerDisclosureUrl = showProvider ? disclosureUrl : ''
 
   const logos = hasLogos ? (
     <div className="flex items-center justify-center gap-4">
@@ -48,9 +58,9 @@ function FinancingBadge() {
     <section className="border-b border-brand/20 bg-white">
       <div className="mx-auto flex max-w-5xl justify-center px-4 py-6">
         <div className="flex flex-col items-center space-y-3 text-center">
-          {applyUrl ? (
+          {providerApplyUrl ? (
             <a
-              href={applyUrl}
+              href={providerApplyUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center space-y-3 hover:opacity-90"
@@ -60,9 +70,9 @@ function FinancingBadge() {
           ) : (
             body
           )}
-          {disclosureUrl ? (
+          {providerDisclosureUrl ? (
             <a
-              href={disclosureUrl}
+              href={providerDisclosureUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium text-brand underline underline-offset-2 hover:opacity-80"

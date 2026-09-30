@@ -22,8 +22,7 @@ const questions = [
   {
     id: 'storm',
     question: 'How fast can you get here for storm damage?',
-    answer:
-      'Call or send the form. Storm and hazardous jobs go first — we usually follow up within minutes.',
+    answer: `Call or send the form. Storm and hazardous jobs go first — we follow up ${siteConfig.callbackPromise}.`,
   },
   {
     id: 'stump',

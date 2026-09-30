@@ -29,7 +29,7 @@ function AppShell() {
   return (
     <>
       {isAdmin ? null : <Header />}
-      <div className={isAdmin ? undefined : 'pb-14 md:pb-0'}>
+      <div className={isAdmin ? undefined : 'pb-16 md:pb-0'}>
         <Suspense fallback={<ChunkFallback />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />

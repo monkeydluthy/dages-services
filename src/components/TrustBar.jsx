@@ -8,13 +8,13 @@ function TrustBar({ reviews }) {
     <section className="border-b border-brand/20 bg-brandTint">
       <ul
         className={`mx-auto grid max-w-5xl items-center gap-4 px-4 py-6 ${
-          showBadge ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-3'
+          showBadge ? 'sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2'
         }`}
       >
         {siteConfig.trustItems.map((item) => (
           <li
             key={item}
-            className="flex items-center justify-center text-center text-sm font-medium text-ink"
+            className="flex items-center justify-center text-center text-base font-bold text-ink sm:text-lg"
           >
             {item}
           </li>
