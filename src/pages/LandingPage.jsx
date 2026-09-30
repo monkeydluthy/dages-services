@@ -5,6 +5,7 @@ import FinancingBadge from '../components/FinancingBadge'
 import Footer from '../components/Footer'
 import Hero from '../components/Hero'
 import LeadForm from '../components/LeadForm'
+import LocalBusinessSchema from '../components/LocalBusinessSchema'
 import OwnerBio from '../components/OwnerBio'
 import SEO, { HOME_SEO } from '../components/SEO'
 import ServiceArea from '../components/ServiceArea'
@@ -95,6 +96,7 @@ function LandingPage() {
   return (
     <main>
       <SEO title={HOME_SEO.title} description={HOME_SEO.description} />
+      <LocalBusinessSchema />
       <Hero />
       <TrustBar />
       <WhenVisible fallback={<div className="min-h-[16rem]" aria-hidden="true" />}>
