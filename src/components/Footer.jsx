@@ -2,6 +2,13 @@ import siteConfig from '../config/siteConfig.json'
 
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.address)}`
 
+function formatList(items) {
+  if (items.length === 0) return ''
+  if (items.length === 1) return items[0]
+  if (items.length === 2) return `${items[0]} and ${items[1]}`
+  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`
+}
+
 function Footer() {
   return (
     <footer className="bg-ink text-brandTint">
@@ -41,8 +48,7 @@ function Footer() {
           © 2026 {siteConfig.businessName}. All rights reserved.
         </p>
         <p className="mt-2 text-sm text-brandTint/60">
-          Licensed & Insured | Serving Hillsborough, Pinellas, Manatee, Polk,
-          and Pasco counties
+          Licensed & Insured | Serving {formatList(siteConfig.counties)} counties
         </p>
         <p className="mt-2 text-sm text-brandTint/60">
           <a

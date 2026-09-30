@@ -7,7 +7,7 @@
   "owner": {
     "name": "Joseph Dages",
     "photoCaption": "Joseph, with family.",
-    "bio": "Joseph Dages has been climbing trees across the Tampa Bay area for over 25 years — long enough to know which cuts save a tree and which storms actually call for a crane instead of a chainsaw. Dages Services is family-run, based in Plant City, and licensed and insured for removal, trimming, stump grinding, storm cleanup, and hazardous work across Hillsborough, Pinellas, Manatee, Polk, and Pasco counties.",
+    "bio": "Joseph Dages has been climbing trees across the Tampa Bay area for over 25 years — long enough to know which cuts save a tree and which storms actually call for a crane instead of a chainsaw. Dages Services is family-run, based in Plant City, and licensed and insured for removal, trimming, stump grinding, storm cleanup, and hazardous work across Hillsborough, Polk, and Pasco counties.",
     "photoSrc": "/owner-family.webp"
   },
   "hero": {
@@ -90,15 +90,10 @@
     "Zephyrhills",
     "Mango",
     "Lithia",
-    "Riverview",
-    "Winter Haven",
-    "Auburndale",
-    "Bartow",
-    "Polk City"
+    "Riverview"
   ],
   "counties": [
-    "Pinellas",
-    "Manatee",
+    "Hillsborough",
     "Polk",
     "Pasco"
   ],
