@@ -1,7 +1,5 @@
 import siteConfig from '../config/siteConfig.json'
 
-const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.address)}`
-
 function formatList(items) {
   if (items.length === 0) return ''
   if (items.length === 1) return items[0]
@@ -27,16 +25,6 @@ function Footer() {
           </span>
         </p>
         <p className="mt-3">
-          <a
-            href={mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="underline underline-offset-2 hover:text-white"
-          >
-            {siteConfig.address}
-          </a>
-        </p>
-        <p className="mt-2">
           <a
             href={`tel:${siteConfig.phone}`}
             className="underline underline-offset-2 hover:text-white"
