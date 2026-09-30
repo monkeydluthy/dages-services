@@ -26,9 +26,17 @@ export function localBusinessJsonLd() {
 }
 
 function LocalBusinessSchema() {
+  const alreadyInDocument =
+    typeof document !== 'undefined' &&
+    Boolean(document.getElementById('local-business-jsonld'))
+
+  if (alreadyInDocument) return null
+
   return (
     <Helmet>
-      <script type="application/ld+json">{JSON.stringify(localBusinessJsonLd())}</script>
+      <script id="local-business-jsonld" type="application/ld+json">
+        {JSON.stringify(localBusinessJsonLd())}
+      </script>
     </Helmet>
   )
 }
