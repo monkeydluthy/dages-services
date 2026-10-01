@@ -122,7 +122,7 @@ function LeadsTable() {
       const { data, error: queryError } = await supabase
         .from('leads')
         .select(
-          'id, name, phone, email, job_type, urgency, notes, status, created_at, is_emergency, photo_urls',
+          'id, name, phone, email, address, job_type, urgency, notes, status, created_at, is_emergency, photo_urls',
         )
         .order('created_at', { ascending: false })
 
@@ -200,6 +200,7 @@ function LeadsTable() {
                 <th className="px-3 py-2">Name</th>
                 <th className="px-3 py-2">Phone</th>
                 <th className="px-3 py-2">Email</th>
+                <th className="px-3 py-2">Address</th>
                 <th className="px-3 py-2">Job</th>
                 <th className="px-3 py-2">Urgency</th>
                 <th className="px-3 py-2">Notes</th>
@@ -239,6 +240,9 @@ function LeadsTable() {
                     <a className="text-brand underline" href={`mailto:${lead.email}`}>
                       {lead.email}
                     </a>
+                  </td>
+                  <td className="max-w-xs px-3 py-3 text-ink/70">
+                    {lead.address || '—'}
                   </td>
                   <td className="px-3 py-3 text-ink">{lead.job_type}</td>
                   <td className="px-3 py-3 text-ink/80">{lead.urgency}</td>

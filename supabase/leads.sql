@@ -15,6 +15,7 @@ create table leads (
   utm_campaign text,
   referrer text,
   landing_path text,
+  address text,
   photo_urls text[]
 );
 
@@ -120,3 +121,5 @@ $$;
 
 revoke all on function public.append_lead_photos(uuid, text[]) from public;
 grant execute on function public.append_lead_photos(uuid, text[]) to anon, authenticated;
+
+alter table leads add column if not exists address text;

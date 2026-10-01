@@ -42,6 +42,7 @@ export default async (request) => {
       text: `${lead.name} – ${lead.phone} – ${lead.email}
 Job: ${lead.job_type}
 Urgency: ${lead.urgency}
+Address: ${display(lead.address)}
 Notes: ${lead.notes || '(none)'}
 Source: ${display(lead.utm_source)} / ${display(lead.utm_medium)} / ${display(lead.utm_campaign)}
 Referrer: ${display(lead.referrer)}

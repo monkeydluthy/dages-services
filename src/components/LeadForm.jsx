@@ -15,6 +15,7 @@ function LeadForm({ id = 'lead-form', plain = false }) {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
+  const [address, setAddress] = useState('')
   const [jobType, setJobType] = useState('')
   const [urgency, setUrgency] = useState('')
   const [notes, setNotes] = useState('')
@@ -47,6 +48,7 @@ function LeadForm({ id = 'lead-form', plain = false }) {
       name: name.trim(),
       phone: phone.trim(),
       email: email.trim(),
+      address: address.trim() || null,
       job_type: jobType,
       urgency,
       notes: notes.trim() || null,
@@ -126,23 +128,36 @@ function LeadForm({ id = 'lead-form', plain = false }) {
               />
             </label>
             <label className="block">
-              <span className="mb-1 block text-sm font-medium text-ink">Job type</span>
-              <select
-                required
-                name="jobType"
-                value={jobType}
-                onChange={(event) => setJobType(event.target.value)}
+              <span className="mb-1 block text-xs font-medium text-ink/60">
+                Property address <span className="font-normal">(optional)</span>
+              </span>
+              <input
+                name="address"
+                autoComplete="street-address"
+                value={address}
+                onChange={(event) => setAddress(event.target.value)}
+                placeholder="Where's the job?"
                 className={fieldClass}
-              >
-                <option value="">Select a service</option>
-                {siteConfig.services.map((service) => (
-                  <option key={service.id} value={service.name}>
-                    {service.name}
-                  </option>
-                ))}
-              </select>
+              />
             </label>
           </div>
+          <label className="block">
+            <span className="mb-1 block text-sm font-medium text-ink">Job type</span>
+            <select
+              required
+              name="jobType"
+              value={jobType}
+              onChange={(event) => setJobType(event.target.value)}
+              className={fieldClass}
+            >
+              <option value="">Select a service</option>
+              {siteConfig.services.map((service) => (
+                <option key={service.id} value={service.name}>
+                  {service.name}
+                </option>
+              ))}
+            </select>
+          </label>
           <fieldset className="space-y-2 md:space-y-1">
             <legend className="mb-1 text-sm font-medium text-ink">Urgency</legend>
             {siteConfig.urgencyOptions.map((option) => (
