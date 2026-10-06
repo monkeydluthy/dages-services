@@ -15,6 +15,7 @@ export const HOME_OG = {
     'Tree removal, trimming, stump grinding, storm cleanup, and crane work in Plant City and greater Tampa Bay.',
   image: 'https://dagesservices.com/og-image.png',
   url: SITE_CANONICAL,
+  siteName: 'Dages Services, LLC',
 }
 
 function SEO({
@@ -37,6 +38,7 @@ function SEO({
           <meta property="og:image" content={HOME_OG.image} />
           <meta property="og:url" content={HOME_OG.url} />
           <meta property="og:type" content="website" />
+          <meta property="og:site_name" content={HOME_OG.siteName} />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content={HOME_OG.title} />
           <meta name="twitter:description" content={HOME_OG.description} />
