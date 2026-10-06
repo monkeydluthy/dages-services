@@ -1,6 +1,6 @@
 // Netlify's prerenderer doesn't document its user agent or inject anything on window,
 // so this is a layered best guess: crawler/prerender UAs plus headless/automation flags.
-const BOT_UA = /bot|crawl|spider|slurp|prerender|headless|lighthouse|facebookexternalhit/i
+const BOT_UA = /bot|crawl|spider|slurp|prerender|headless|facebookexternalhit/i
 
 export function isPrerenderContext() {
   if (typeof navigator === 'undefined') return false
