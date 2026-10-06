@@ -23,7 +23,10 @@ function AppShell() {
 
   useEffect(() => {
     const poster = document.getElementById('hero-lcp')
-    if (poster) poster.hidden = pathname !== '/'
+    const clip = document.getElementById('hero-lcp-clip')
+    const hidePoster = pathname !== '/'
+    if (poster) poster.hidden = hidePoster
+    if (clip) clip.hidden = hidePoster
   }, [pathname])
 
   return (

@@ -100,6 +100,7 @@ function LandingPage() {
       <LocalBusinessSchema />
       <FAQPageSchema />
       <Hero />
+      <div className="relative bg-brandTint">
       <TrustBar />
       <WhenVisible fallback={<div className="min-h-[16rem]" aria-hidden="true" />}>
         <Suspense fallback={<ChunkFallback />}>
@@ -153,6 +154,7 @@ function LandingPage() {
         </div>
       </section>
       <Footer />
+      </div>
     </main>
   )
 }

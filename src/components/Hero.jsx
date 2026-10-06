@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import LeadForm from './LeadForm'
 import siteConfig from '../config/siteConfig.json'
 import heroVideo from '../assets/video/hero-bg.mp4'
@@ -43,9 +43,28 @@ function useHeroVideo() {
 
 function Hero() {
   const showVideo = useHeroVideo()
+  const heroRef = useRef(null)
+
+  useLayoutEffect(() => {
+    const hero = heroRef.current
+    const clip = document.getElementById('hero-lcp-clip')
+    if (!hero || !clip) return undefined
+
+    const sync = () => {
+      clip.style.height = `${Math.round(hero.getBoundingClientRect().height)}px`
+    }
+    sync()
+    const observer = new ResizeObserver(sync)
+    observer.observe(hero)
+    window.addEventListener('resize', sync)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', sync)
+    }
+  }, [])
 
   return (
-    <section className="relative text-brandTint">
+    <section ref={heroRef} data-hero className="relative overflow-hidden text-brandTint">
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         {showVideo ? (
           <video

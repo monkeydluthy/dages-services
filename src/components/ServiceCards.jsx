@@ -111,21 +111,23 @@ function Icon({ name }) {
 
 function ServiceCards() {
   return (
-    <section className="mx-auto max-w-5xl px-4 py-12 sm:py-16">
-      <h2 className="mb-6 text-2xl font-bold text-ink sm:mb-8 sm:text-3xl">
-        Tree Services in Plant City & Tampa Bay
-      </h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {siteConfig.services.map((service) => (
-          <article
-            key={service.id}
-            className="rounded-lg border border-brand/20 bg-white p-6 shadow-sm"
-          >
-            <Icon name={service.icon} />
-            <h3 className="mb-2 mt-4 text-lg font-semibold text-ink">{service.name}</h3>
-            <p className="text-sm text-ink/70">{service.description}</p>
-          </article>
-        ))}
+    <section className="bg-brandTint">
+      <div className="mx-auto max-w-5xl px-4 py-12 sm:py-16">
+        <h2 className="mb-6 text-2xl font-bold text-ink sm:mb-8 sm:text-3xl">
+          Tree Services in Plant City & Tampa Bay
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {siteConfig.services.map((service) => (
+            <article
+              key={service.id}
+              className="rounded-lg border border-brand/20 bg-white p-6 shadow-sm"
+            >
+              <Icon name={service.icon} />
+              <h3 className="mb-2 mt-4 text-lg font-semibold text-ink">{service.name}</h3>
+              <p className="text-sm text-ink/70">{service.description}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   )

@@ -177,17 +177,27 @@
         descent-override: 19.5%;
         line-gap-override: 0%;
       }
-      #hero-lcp {
+      #hero-lcp-clip {
         position: absolute;
         top: 4rem;
         left: 0;
         z-index: 0;
         width: 100%;
         height: 75rem;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      #hero-lcp {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 75rem;
         object-fit: cover;
         pointer-events: none;
       }
-      #hero-lcp[hidden] {
+      #hero-lcp[hidden],
+      #hero-lcp-clip[hidden] {
         display: none;
       }
       #root {
@@ -206,15 +216,17 @@
     />
   </head>
   <body>
-    <img
-      id="hero-lcp"
-      src="/hero-poster.webp"
-      alt=""
-      width="1024"
-      height="576"
-      fetchpriority="high"
-      decoding="async"
-    />
+    <div id="hero-lcp-clip">
+      <img
+        id="hero-lcp"
+        src="/hero-poster.webp"
+        alt=""
+        width="1024"
+        height="576"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </div>
     <div id="root"></div>
     <script>
       (function () {
