@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { itemPosterUrl } from '../lib/portfolioMedia'
+import { markPrerenderReady } from '../lib/prerender'
 import { supabase } from '../lib/supabaseClient'
 
 const PAGE_SIZE = 8
@@ -272,11 +273,19 @@ function PortfolioGallery() {
         setItems(fallback.error ? [] : (fallback.data ?? []))
         setReady(true)
       })
+      .catch(() => {
+        if (!cancelled) setReady(true)
+      })
 
     return () => {
       cancelled = true
     }
   }, [])
+
+  // Runs after the commit that renders the section, so the snapshot sees it.
+  useEffect(() => {
+    if (ready) markPrerenderReady()
+  }, [ready])
 
   const pages = chunkItems(items, PAGE_SIZE)
   const lastPage = Math.max(0, pages.length - 1)

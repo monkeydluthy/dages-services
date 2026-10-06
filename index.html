@@ -11,6 +11,15 @@
       gtag('js', new Date());
       gtag('config', 'G-6JXHH4ND1Z');
     </script>
+    <script>
+      // Home page only: hold the prerender snapshot until the gallery settles
+      // (see src/lib/prerender.js). The timer keeps a failed load under the
+      // service's 10s default cutoff.
+      if (location.pathname === '/') {
+        window.prerenderReady = false;
+        setTimeout(function () { window.prerenderReady = true; }, 8000);
+      }
+    </script>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
