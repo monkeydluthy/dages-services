@@ -16,7 +16,8 @@ create table leads (
   referrer text,
   landing_path text,
   address text,
-  photo_urls text[]
+  photo_urls text[],
+  review_requested_at timestamptz
 );
 
 create index leads_created_at_idx on leads (created_at desc);
@@ -123,3 +124,4 @@ revoke all on function public.append_lead_photos(uuid, text[]) from public;
 grant execute on function public.append_lead_photos(uuid, text[]) to anon, authenticated;
 
 alter table leads add column if not exists address text;
+alter table leads add column if not exists review_requested_at timestamptz;

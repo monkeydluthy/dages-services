@@ -54,15 +54,16 @@ function envCsvList(value) {
     .filter(Boolean)
 }
 
-export async function sendResendEmail({ to, from, subject, text }) {
+export async function sendResendEmail({ to, from, subject, text, html }) {
   if (!process.env.RESEND_API_KEY) throw new Error('RESEND_API_KEY is not set')
   if (!from) throw new Error('RESEND_FROM_EMAIL is not set')
 
   const recipients = Array.isArray(to) ? envCsvList(to.join(',')) : envCsvList(to)
-  if (!recipients.length) throw new Error('LEAD_ALERT_EMAIL_TO is not set')
+  if (!recipients.length) throw new Error('email recipient is not set')
 
   const resendUrl = 'https://api.resend.com/emails'
   const payload = { from, to: recipients, subject, text }
+  if (html) payload.html = html
 
   console.log('Resend request:', {
     url: resendUrl,
