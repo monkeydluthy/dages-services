@@ -1,6 +1,26 @@
 -- Review-request webhook when a lead is marked closed.
 -- Same mechanism as notify-lead: supabase_functions.http_request (Database Webhook).
 -- Safe to re-run. URL and secret come from private.notify_settings.
+--
+-- If the DO block raises "notify_settings is missing", insert once using
+-- SITE_URL and WEBHOOK_SECRET from Netlify / .env (do not commit the secret):
+--   insert into private.notify_settings (id, site_url, webhook_secret)
+--   values (1, 'https://dagesservices.com', 'YOUR_WEBHOOK_SECRET')
+--   on conflict (id) do update
+--     set site_url = excluded.site_url,
+--         webhook_secret = excluded.webhook_secret;
+
+create schema if not exists private;
+revoke all on schema private from public, anon, authenticated;
+
+create table if not exists private.notify_settings (
+  id int primary key default 1 check (id = 1),
+  site_url text not null,
+  webhook_secret text not null
+);
+
+alter table private.notify_settings enable row level security;
+revoke all on table private.notify_settings from public, anon, authenticated;
 
 alter table public.leads
   add column if not exists review_requested_at timestamptz;

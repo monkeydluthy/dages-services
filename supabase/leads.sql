@@ -41,7 +41,7 @@ create policy "authenticated update leads"
 -- Secrets for photo alerts live here, not in Netlify env. Postgres cannot
 -- read Netlify SITE_URL / WEBHOOK_SECRET. Insert the SAME values once:
 --   insert into private.notify_settings (site_url, webhook_secret)
---   values ('https://dages-services.netlify.app', 'your-webhook-secret')
+--   values ('https://dagesservices.com', 'your-webhook-secret')
 --   on conflict (id) do update
 --     set site_url = excluded.site_url,
 --         webhook_secret = excluded.webhook_secret;
