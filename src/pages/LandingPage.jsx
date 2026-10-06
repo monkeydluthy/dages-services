@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import ChunkFallback from '../components/ChunkFallback'
 import FAQ from '../components/FAQ'
+import FAQPageSchema from '../components/FAQPageSchema'
 import FinancingBadge from '../components/FinancingBadge'
 import Footer from '../components/Footer'
 import Hero from '../components/Hero'
@@ -97,6 +98,7 @@ function LandingPage() {
     <main>
       <SEO title={HOME_SEO.title} description={HOME_SEO.description} />
       <LocalBusinessSchema />
+      <FAQPageSchema />
       <Hero />
       <TrustBar />
       <WhenVisible fallback={<div className="min-h-[16rem]" aria-hidden="true" />}>

@@ -1,40 +1,4 @@
-import siteConfig from '../config/siteConfig.json'
-
-function formatList(items) {
-  if (items.length === 0) return ''
-  if (items.length === 1) return items[0]
-  if (items.length === 2) return `${items[0]} and ${items[1]}`
-  return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`
-}
-
-const questions = [
-  {
-    id: 'estimates',
-    question: 'Do you offer free estimates?',
-    answer:
-      "Yes. Tell us the job and we'll quote it. No charge to come look.",
-  },
-  {
-    id: 'licensed',
-    question: 'Are you licensed and insured?',
-    answer: 'Yes. Licensed and insured — family-run out of Plant City.',
-  },
-  {
-    id: 'storm',
-    question: 'How fast can you get here for storm damage?',
-    answer: `Call or send the form. Storm and hazardous jobs go first — we follow up ${siteConfig.callbackPromise}.`,
-  },
-  {
-    id: 'stump',
-    question: 'Do you handle stump grinding and hauling debris?',
-    answer: 'Yes. Stump grinding is on the list, and we haul what we cut.',
-  },
-  {
-    id: 'areas',
-    question: 'What areas do you serve?',
-    answer: `${formatList(siteConfig.counties)} counties — including ${formatList(siteConfig.cities)}.`,
-  },
-]
+import { getFaqItems } from '../lib/faq'
 
 function FAQ() {
   return (
@@ -44,7 +8,7 @@ function FAQ() {
           Tree Service Questions, Answered
         </h2>
         <div className="rounded-lg border border-brand/20 bg-white px-4 sm:px-6">
-          {questions.map((item) => (
+          {getFaqItems().map((item) => (
             <details
               key={item.id}
               className="group border-b border-brand/20 last:border-b-0"
