@@ -111,6 +111,7 @@ function AdminUpload({ onUploaded }) {
   const [file, setFile] = useState(null)
   const [title, setTitle] = useState('')
   const [jobType, setJobType] = useState('')
+  const [city, setCity] = useState('')
   const [progress, setProgress] = useState(0)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -138,6 +139,7 @@ function AdminUpload({ onUploaded }) {
     setFile(null)
     setTitle('')
     setJobType('')
+    setCity('')
     setProgress(0)
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
@@ -223,6 +225,7 @@ function AdminUpload({ onUploaded }) {
         media_type: mediaType,
         media_url: publicData.publicUrl,
         job_type: jobType || null,
+        city: city || null,
         width,
         height,
         poster_url: posterUrl,
@@ -235,7 +238,9 @@ function AdminUpload({ onUploaded }) {
           .from('portfolio-media')
           .remove([objectPath, ...extras.filter(Boolean)])
         throw new Error(
-          insertError.message?.includes('width') || insertError.message?.includes('alt_text')
+          insertError.message?.includes('width') ||
+            insertError.message?.includes('alt_text') ||
+            insertError.message?.includes('city')
             ? 'Run the portfolio media SQL in Supabase first, then try again.'
             : 'File uploaded but saving the row failed. Try again.',
         )
@@ -260,7 +265,7 @@ function AdminUpload({ onUploaded }) {
       <h2 className="mb-1 text-xl font-bold text-ink">Add to portfolio</h2>
       <p className="mb-6 text-sm text-ink/70">
         One photo or video at a time. Photos are resized and saved as WebP before
-        they go up. Title and job type are optional.
+        they go up. Title, job type, and city are optional.
       </p>
       <form className="grid gap-4" onSubmit={handleSubmit}>
         <label className="block">
@@ -301,6 +306,24 @@ function AdminUpload({ onUploaded }) {
             {siteConfig.services.map((service) => (
               <option key={service.id} value={service.name}>
                 {service.name}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-sm font-medium text-ink">
+            City <span className="font-normal text-ink/60">(optional)</span>
+          </span>
+          <select
+            name="city"
+            value={city}
+            onChange={(event) => setCity(event.target.value)}
+            className={fieldClass}
+          >
+            <option value="">None</option>
+            {siteConfig.cities.map((name) => (
+              <option key={name} value={name}>
+                {name}
               </option>
             ))}
           </select>

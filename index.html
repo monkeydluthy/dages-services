@@ -12,10 +12,15 @@
       gtag('config', 'G-6JXHH4ND1Z');
     </script>
     <script>
-      // Home page only: hold the prerender snapshot until the gallery settles
+      // Hold the prerender snapshot until the gallery settles
       // (see src/lib/prerender.js). The timer keeps a failed load under the
       // service's 10s default cutoff.
-      if (location.pathname === '/') {
+      var path = location.pathname
+      if (
+        path === '/' ||
+        path.indexOf('/services/') === 0 ||
+        path.indexOf('/areas/') === 0
+      ) {
         window.prerenderReady = false;
         setTimeout(function () { window.prerenderReady = true; }, 8000);
       }
@@ -171,6 +176,21 @@
       ]
     }
     </script>
+    <script>
+      if (location.pathname !== '/') {
+        var homeLd = document.getElementById('local-business-jsonld')
+        var homeFaq = document.getElementById('faq-page-jsonld')
+        if (homeLd) homeLd.remove()
+        if (homeFaq) homeFaq.remove()
+        var canon = document.querySelector('link[rel="canonical"]')
+        if (canon) {
+          canon.setAttribute(
+            'href',
+            'https://dagesservices.com' + location.pathname.replace(/\/+$/, ''),
+          )
+        }
+      }
+    </script>
     <style>
       @font-face {
         font-family: 'Outfit';
@@ -237,6 +257,14 @@
         decoding="async"
       />
     </div>
+    <script>
+      if (location.pathname !== '/') {
+        var clip = document.getElementById('hero-lcp-clip')
+        var poster = document.getElementById('hero-lcp')
+        if (clip) clip.hidden = true
+        if (poster) poster.hidden = true
+      }
+    </script>
     <div id="root"></div>
     <script>
       (function () {

@@ -7,6 +7,7 @@ import StickyCallButton from './components/StickyCallButton'
 import useNoIndex from './hooks/useNoIndex'
 import { captureLeadAttribution } from './lib/leadAttribution'
 import LandingPage from './pages/LandingPage'
+import { AreaPage, ServicePage } from './pages/ContentPage'
 
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'))
 const AdminLogin = lazy(() => import('./pages/AdminLogin'))
@@ -27,6 +28,13 @@ function AppShell() {
     const hidePoster = pathname !== '/'
     if (poster) poster.hidden = hidePoster
     if (clip) clip.hidden = hidePoster
+
+    for (const id of ['faq-page-jsonld', 'local-business-jsonld']) {
+      const el = document.getElementById(id)
+      if (!el) continue
+      if (pathname === '/') continue
+      el.remove()
+    }
   }, [pathname])
 
   return (
@@ -36,6 +44,8 @@ function AppShell() {
         <Suspense fallback={<ChunkFallback />}>
           <Routes>
             <Route path="/" element={<LandingPage />} />
+            <Route path="/services/:slug" element={<ServicePage />} />
+            <Route path="/areas/:slug" element={<AreaPage />} />
             <Route path="/thank-you" element={<ThankYouPage />} />
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route

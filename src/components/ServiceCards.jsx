@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import { getServicePage, servicePath } from '../config/pages'
 import siteConfig from '../config/siteConfig.json'
 
 const iconClass = 'h-8 w-8 text-brand'
@@ -117,16 +119,35 @@ function ServiceCards() {
           Tree Services in Plant City & Tampa Bay
         </h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {siteConfig.services.map((service) => (
-            <article
-              key={service.id}
-              className="rounded-lg border border-brand/20 bg-white p-6 shadow-sm"
-            >
-              <Icon name={service.icon} />
-              <h3 className="mb-2 mt-4 text-lg font-semibold text-ink">{service.name}</h3>
-              <p className="text-sm text-ink/70">{service.description}</p>
-            </article>
-          ))}
+          {siteConfig.services.map((service) => {
+            const page = getServicePage(service.id)
+            const body = (
+              <>
+                <Icon name={service.icon} />
+                <h3 className="mb-2 mt-4 text-lg font-semibold text-ink">{service.name}</h3>
+                <p className="text-sm text-ink/70">{service.description}</p>
+              </>
+            )
+            const className = 'rounded-lg border border-brand/20 bg-white p-6 shadow-sm'
+
+            if (page) {
+              return (
+                <Link
+                  key={service.id}
+                  to={servicePath(page.slug)}
+                  className={`${className} block hover:border-brand/40`}
+                >
+                  {body}
+                </Link>
+              )
+            }
+
+            return (
+              <article key={service.id} className={className}>
+                {body}
+              </article>
+            )
+          })}
         </div>
       </div>
     </section>

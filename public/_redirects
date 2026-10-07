@@ -1,5 +1,7 @@
 /            /index.html  200
 /thank-you   /index.html  200
+/services/*  /index.html  200
+/areas/*     /index.html  200
 /admin       /index.html  200
 /admin/*     /index.html  200
 /*           /404.html    404

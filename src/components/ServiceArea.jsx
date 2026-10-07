@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+import { areaPath, cityToSlug, getAreaPage } from '../config/pages'
 import siteConfig from '../config/siteConfig.json'
 
 function formatList(items) {
@@ -16,14 +18,22 @@ function ServiceArea() {
         </h2>
         <p className="mb-6 text-sm font-medium text-ink/60">including:</p>
         <ul className="flex flex-wrap gap-3">
-          {siteConfig.cities.map((city) => (
-            <li
-              key={city}
-              className="rounded-full bg-brandTint px-4 py-2 text-sm font-medium text-brand"
-            >
-              {city}
-            </li>
-          ))}
+          {siteConfig.cities.map((city) => {
+            const page = getAreaPage(cityToSlug(city))
+            const className = 'rounded-full bg-brandTint px-4 py-2 text-sm font-medium text-brand'
+
+            return (
+              <li key={city}>
+                {page ? (
+                  <Link to={areaPath(page.slug)} className={`${className} inline-block hover:opacity-90`}>
+                    {city}
+                  </Link>
+                ) : (
+                  <span className={className}>{city}</span>
+                )}
+              </li>
+            )
+          })}
         </ul>
       </div>
     </section>

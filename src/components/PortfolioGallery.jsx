@@ -26,7 +26,7 @@ function PlayIcon() {
   )
 }
 
-function GalleryThumb({ item, onImageError }) {
+export function GalleryThumb({ item, onImageError }) {
   const alt = item.alt_text || item.title || 'Recent work'
   const width = item.width || undefined
   const height = item.height || undefined
@@ -134,7 +134,7 @@ function ChevronRightIcon() {
 const lightboxControlClass =
   'absolute z-[81] flex items-center justify-center rounded-full p-2 text-white/80 transition-colors hover:bg-white/10 hover:text-white'
 
-function GalleryLightbox({ items, index, onClose, onChange }) {
+export function GalleryLightbox({ items, index, onClose, onChange }) {
   const item = items[index]
   const hasPrev = index > 0
   const hasNext = index < items.length - 1

@@ -9,6 +9,7 @@ create table if not exists portfolio_items (
   media_type text not null,
   media_url text not null,
   job_type text,
+  city text,
   sort_order int not null default 0,
   width int,
   height int,
@@ -42,4 +43,5 @@ alter table portfolio_items
   add column if not exists width int,
   add column if not exists height int,
   add column if not exists poster_url text,
-  add column if not exists alt_text text;
+  add column if not exists alt_text text,
+  add column if not exists city text;

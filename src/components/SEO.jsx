@@ -1,3 +1,4 @@
+import { useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 
 export const SITE_CANONICAL = 'https://dagesservices.com/'
@@ -18,33 +19,58 @@ export const HOME_OG = {
   siteName: 'Dages Services, LLC',
 }
 
+function upsertCanonical(href) {
+  const extras = [...document.querySelectorAll('link[rel="canonical"]')]
+  let link = extras[0]
+  if (!link) {
+    link = document.createElement('link')
+    link.setAttribute('rel', 'canonical')
+    document.head.appendChild(link)
+  }
+  link.setAttribute('href', href)
+  extras.slice(1).forEach((el) => el.remove())
+}
+
+function upsertMeta(attr, key, content) {
+  const all = [...document.querySelectorAll(`meta[${attr}="${key}"]`)]
+  let el = all[0]
+  if (!el) {
+    el = document.createElement('meta')
+    el.setAttribute(attr, key)
+    document.head.appendChild(el)
+  }
+  el.setAttribute('content', content)
+  all.slice(1).forEach((node) => node.remove())
+}
+
 function SEO({
   title = HOME_SEO.title,
   description = HOME_SEO.description,
+  canonical = SITE_CANONICAL,
 }) {
-  const alreadyInDocument =
-    typeof document !== 'undefined' &&
-    Boolean(document.querySelector('meta[property="og:title"]'))
+  const isHome = canonical === SITE_CANONICAL
+  const ogTitle = isHome ? HOME_OG.title : title
+  const ogDescription = isHome ? HOME_OG.description : description
+  const ogUrl = isHome ? HOME_OG.url : canonical
+
+  useLayoutEffect(() => {
+    upsertCanonical(canonical)
+    upsertMeta('name', 'description', description)
+    upsertMeta('property', 'og:title', ogTitle)
+    upsertMeta('property', 'og:description', ogDescription)
+    upsertMeta('property', 'og:image', HOME_OG.image)
+    upsertMeta('property', 'og:url', ogUrl)
+    upsertMeta('property', 'og:type', 'website')
+    upsertMeta('property', 'og:site_name', HOME_OG.siteName)
+    upsertMeta('name', 'twitter:card', 'summary_large_image')
+    upsertMeta('name', 'twitter:title', ogTitle)
+    upsertMeta('name', 'twitter:description', ogDescription)
+    upsertMeta('name', 'twitter:image', HOME_OG.image)
+  }, [canonical, description, ogDescription, ogTitle, ogUrl])
 
   return (
     <Helmet>
       <title>{title}</title>
-      <meta name="description" content={description} />
-      <link rel="canonical" href={SITE_CANONICAL} />
-      {alreadyInDocument ? null : (
-        <>
-          <meta property="og:title" content={HOME_OG.title} />
-          <meta property="og:description" content={HOME_OG.description} />
-          <meta property="og:image" content={HOME_OG.image} />
-          <meta property="og:url" content={HOME_OG.url} />
-          <meta property="og:type" content="website" />
-          <meta property="og:site_name" content={HOME_OG.siteName} />
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={HOME_OG.title} />
-          <meta name="twitter:description" content={HOME_OG.description} />
-          <meta name="twitter:image" content={HOME_OG.image} />
-        </>
-      )}
     </Helmet>
   )
 }
