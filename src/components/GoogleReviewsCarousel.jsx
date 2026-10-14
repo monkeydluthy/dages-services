@@ -73,7 +73,7 @@ function GoogleReviewsCarousel() {
         </div>
 
         <div
-          className="mt-8 flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto overflow-y-hidden px-1 items-start pb-4 [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain] sm:gap-5"
+          className="mt-8 flex snap-x snap-mandatory flex-nowrap gap-3 overflow-x-auto overflow-y-hidden px-1 pb-4 [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain] sm:gap-5"
           role="region"
           aria-label="Google reviews"
           tabIndex={0}
