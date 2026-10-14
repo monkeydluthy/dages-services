@@ -7,21 +7,39 @@ function useGoogleReviews() {
     let cancelled = false
 
     fetch('/.netlify/functions/google-reviews')
-      .then((response) => {
-        if (!response.ok) throw new Error('reviews unavailable')
+      .then(async (response) => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => null)
+          throw Object.assign(new Error('reviews unavailable'), {
+            status: response.status,
+            body,
+          })
+        }
         return response.json()
       })
       .then((payload) => {
+        if (cancelled) return
         if (
-          cancelled ||
           !payload?.rating ||
-          !payload?.userRatingsTotal
+          !payload?.userRatingsTotal ||
+          !Array.isArray(payload.reviews) ||
+          payload.reviews.length === 0
         ) {
+          console.error('[reviews] Feed returned no reviews; hiding the reviews section.', {
+            rating: payload?.rating,
+            total: payload?.userRatingsTotal,
+          })
           return
         }
         setReviews(payload)
       })
-      .catch(() => {})
+      .catch((error) => {
+        console.error('[reviews] Failed to load reviews; hiding the reviews section.', {
+          status: error.status,
+          response: error.body,
+          message: error.message,
+        })
+      })
 
     return () => {
       cancelled = true
