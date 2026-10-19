@@ -87,6 +87,7 @@ function CustomerPhotoUpload({ leadId }) {
     )
 
     if (!updateError) {
+      window.gtag?.('event', 'photo_upload', { lead_id: leadId })
       const payload =
         data && typeof data === 'object' && !Array.isArray(data)
           ? data

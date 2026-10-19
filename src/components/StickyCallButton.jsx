@@ -17,6 +17,7 @@ function StickyCallButton() {
   return (
     <a
       href={`tel:${siteConfig.phone}`}
+      data-location="mobile_sticky"
       className="fixed inset-x-0 bottom-0 z-40 flex h-16 items-center justify-center gap-2 bg-brand text-lg font-bold text-brandTint md:hidden"
     >
       <PhoneIcon />

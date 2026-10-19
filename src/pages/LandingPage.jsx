@@ -71,7 +71,7 @@ function ShieldIcon() {
   )
 }
 
-function InfoCard({ icon, label, value, subtext, href }) {
+function InfoCard({ icon, label, value, subtext, href, dataLocation }) {
   return (
     <article className="flex flex-1 flex-col items-center justify-center rounded-lg border border-white/15 bg-black/25 px-4 py-5 text-center">
       {icon}
@@ -80,6 +80,7 @@ function InfoCard({ icon, label, value, subtext, href }) {
         href ? (
           <a
             href={href}
+            data-location={dataLocation}
             className="mt-1 text-lg font-bold text-white hover:opacity-90"
           >
             {value}
@@ -126,7 +127,7 @@ function LandingPage() {
           <div className="grid gap-8 md:grid-cols-2 md:items-stretch md:gap-12">
             <div className="order-1 md:order-2">
               <div className="h-full rounded-lg border border-brand/20 bg-white p-3 shadow-xl md:p-4">
-                <LeadForm plain />
+                <LeadForm plain method="bottom" />
               </div>
             </div>
 
@@ -136,6 +137,7 @@ function LandingPage() {
                 label="Call Us"
                 value={siteConfig.phone}
                 href={`tel:${siteConfig.phone}`}
+                dataLocation="bottom_card"
                 subtext={siteConfig.callbackPromiseLabel}
               />
               <InfoCard

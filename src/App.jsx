@@ -23,6 +23,21 @@ function AppShell() {
   }, [pathname])
 
   useEffect(() => {
+    function onClick(event) {
+      const target = event.target
+      if (!(target instanceof Element)) return
+      const link = target.closest('a[href^="tel:"]')
+      if (!link) return
+      window.gtag?.('event', 'click_to_call', {
+        link_location: link.dataset.location || 'unknown',
+      })
+    }
+
+    document.addEventListener('click', onClick)
+    return () => document.removeEventListener('click', onClick)
+  }, [])
+
+  useEffect(() => {
     const poster = document.getElementById('hero-lcp')
     const clip = document.getElementById('hero-lcp-clip')
     const hidePoster = pathname !== '/'

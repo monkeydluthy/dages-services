@@ -95,6 +95,7 @@ function Hero() {
           <div>
             <a
               href={`tel:${siteConfig.phone}`}
+              data-location="hero"
               className="inline-flex w-full items-center justify-center rounded-md bg-brandTint px-5 py-3 font-semibold text-brand hover:opacity-90 md:w-auto"
             >
               {siteConfig.callToday}
@@ -102,7 +103,7 @@ function Hero() {
           </div>
         </div>
         <div className="w-full md:justify-self-end">
-          <LeadForm id="hero-lead-form" />
+          <LeadForm id="hero-lead-form" method="hero" />
         </div>
       </div>
     </section>

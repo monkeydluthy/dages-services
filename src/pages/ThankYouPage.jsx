@@ -28,6 +28,7 @@ function ThankYouPage() {
           <a
             className="font-semibold text-brand underline"
             href={`tel:${siteConfig.phone}`}
+            data-location="thank_you"
           >
             {siteConfig.phone}
           </a>

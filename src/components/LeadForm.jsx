@@ -10,7 +10,7 @@ const EMERGENCY_JOBS = new Set(['Storm cleanup', 'Hazardous removal'])
 const fieldClass =
   'w-full rounded-md border border-brand/30 px-3 py-2.5 text-base text-ink'
 
-function LeadForm({ id = 'lead-form', plain = false }) {
+function LeadForm({ id = 'lead-form', plain = false, method = 'bottom' }) {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -67,6 +67,12 @@ function LeadForm({ id = 'lead-form', plain = false }) {
       setError('Something went wrong sending this. Please try again or call us.')
       return
     }
+
+    window.gtag?.('event', 'generate_lead', {
+      method,
+      job_type: jobType,
+      is_emergency: isEmergency,
+    })
 
     navigate(`/thank-you?lead_id=${leadId}`)
   }

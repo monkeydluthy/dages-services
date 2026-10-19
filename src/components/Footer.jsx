@@ -27,6 +27,7 @@ function Footer() {
         <p className="mt-3">
           <a
             href={`tel:${siteConfig.phone}`}
+            data-location="footer"
             className="underline underline-offset-2 hover:text-white"
           >
             {siteConfig.phone}

@@ -232,7 +232,11 @@ function LeadsTable() {
                   </td>
                   <td className="px-3 py-3 font-medium text-ink">{lead.name}</td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <a className="text-brand underline" href={`tel:${lead.phone}`}>
+                    <a
+                      className="text-brand underline"
+                      href={`tel:${lead.phone}`}
+                      data-location="admin"
+                    >
                       {lead.phone}
                     </a>
                   </td>
