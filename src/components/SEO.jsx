@@ -4,9 +4,9 @@ import { Helmet } from 'react-helmet-async'
 export const SITE_CANONICAL = 'https://dagesservices.com/'
 
 export const HOME_SEO = {
-  title: 'Tree Service in Plant City, FL | Dages Services',
+  title: 'Tree Removal & Storm Cleanup in Plant City, FL | Dages Services',
   description:
-    'Tree removal, trimming, stump grinding, storm cleanup, and crane work in Plant City and greater Tampa Bay. Request a quote — Joseph calls back.',
+    'Tree removal, trimming, stump grinding & storm cleanup in Plant City & Tampa Bay. Family-run, licensed. Call (813) 716-9436 — same business day callback.',
   canonical: SITE_CANONICAL,
 }
 
