@@ -37,7 +37,7 @@ function Footer() {
           © 2026 {siteConfig.businessName}. All rights reserved.
         </p>
         <p className="mt-2 text-sm text-brandTint/60">
-          Licensed & Insured | Serving {formatList(siteConfig.counties)} counties
+          Serving {formatList(siteConfig.counties)} counties
         </p>
         <p className="mt-2 text-sm text-brandTint/60">
           <a
