@@ -97,11 +97,6 @@ export const servicePages = [
           'Storm and hazardous jobs get priority when they come in, but trimming happens year-round.',
       },
       {
-        id: 'licensed',
-        question: 'Are you licensed and insured?',
-        answer: 'Yes. Licensed and insured — family-run out of Plant City.',
-      },
-      {
         id: 'estimates',
         question: 'Do you quote before you cut?',
         answer: "Yes. Tell us the job and we'll quote it. No charge to come look.",
@@ -187,11 +182,6 @@ export const servicePages = [
         answer:
           'Storm and hazardous jobs get priority when they come in, but trimming, deadwooding, and removals happen year-round.',
       },
-      {
-        id: 'licensed',
-        question: 'Are you licensed and insured?',
-        answer: 'Yes. Licensed and insured — family-run out of Plant City.',
-      },
     ],
     related: [
       { type: 'service', slug: 'tree-trimming' },
@@ -273,11 +263,6 @@ export const servicePages = [
         question: 'How fast can you get here?',
         answer: `Call or send the form. Storm and hazardous jobs go first — we follow up ${siteConfig.callbackPromise}.`,
       },
-      {
-        id: 'licensed',
-        question: 'Are you licensed and insured?',
-        answer: 'Yes. Licensed and insured — family-run out of Plant City.',
-      },
     ],
     related: [
       { type: 'service', slug: 'crane-removal' },
@@ -315,11 +300,6 @@ export const servicePages = [
         id: 'estimates',
         question: 'Do you offer free estimates?',
         answer: "Yes. Tell us the job and we'll quote it. No charge to come look.",
-      },
-      {
-        id: 'licensed',
-        question: 'Are you licensed and insured?',
-        answer: 'Yes. Licensed and insured — family-run out of Plant City.',
       },
     ],
     related: [
@@ -415,11 +395,6 @@ export const areaPages = siteConfig.cities.map((city, index) => {
         id: 'speed',
         question: 'How fast can you get here?',
         answer: `Call or send the form. Storm and hazardous jobs go first — we follow up ${siteConfig.callbackPromise}.`,
-      },
-      {
-        id: 'licensed',
-        question: 'Are you licensed and insured?',
-        answer: 'Yes. Licensed and insured — family-run out of Plant City.',
       },
     ],
     related: [

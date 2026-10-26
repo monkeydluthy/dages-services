@@ -15,11 +15,6 @@ export function getFaqItems() {
       answer: "Yes. Tell us the job and we'll quote it. No charge to come look.",
     },
     {
-      id: 'licensed',
-      question: 'Are you licensed and insured?',
-      answer: 'Yes. Licensed and insured — family-run out of Plant City.',
-    },
-    {
       id: 'storm',
       question: 'How fast can you get here for storm damage?',
       answer: `Call or send the form. Storm and hazardous jobs go first — we follow up ${siteConfig.callbackPromise}.`,

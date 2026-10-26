@@ -50,27 +50,6 @@ function PinIcon() {
   )
 }
 
-function ShieldIcon() {
-  return (
-    <svg className={iconClass} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M12 3.5 5 6.5v6.2c0 4.2 2.9 7.2 7 8.8 4.1-1.6 7-4.6 7-8.8V6.5L12 3.5Z"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="m8.5 12 2.3 2.3 4.7-5"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
 function InfoCard({ icon, label, value, subtext, href, dataLocation }) {
   return (
     <article className="flex flex-1 flex-col items-center justify-center rounded-lg border border-white/15 bg-black/25 px-4 py-5 text-center">
@@ -145,11 +124,6 @@ function LandingPage() {
                 label="Service Area"
                 value="Tampa Bay Area"
                 subtext={areaCities}
-              />
-              <InfoCard
-                icon={<ShieldIcon />}
-                label="Licensed & Insured"
-                subtext="Family-run, Plant City based"
               />
             </div>
           </div>
