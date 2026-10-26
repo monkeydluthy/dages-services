@@ -15,17 +15,12 @@ function serviceClient() {
 }
 
 function firstName(name) {
-  const part = String(name || '')
-    .trim()
-    .split(/\s+/)
-    .find(Boolean)
-  return part || 'there'
-}
-
-function jobPhrase(jobType) {
-  const raw = String(jobType || '').trim()
-  if (!raw) return 'the work'
-  return raw.charAt(0).toLowerCase() + raw.slice(1)
+  return (
+    String(name || '')
+      .trim()
+      .split(/\s+/)
+      .find(Boolean) || ''
+  )
 }
 
 function isClosed(status) {
@@ -49,22 +44,105 @@ async function parseLead(request) {
 
 function reviewCopy(lead) {
   const name = firstName(lead.name)
-  const job = jobPhrase(lead.job_type)
-  const subject = `${name}, could you review the ${job} on Google?`
-  const text = `Hi ${name},
+  const subject = name ? `Thanks, ${name} — how did we do?` : 'Thanks — how did we do?'
+  const reviewUrl = WRITE_REVIEW_URL
+  const font =
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+  const preheader =
+    'Thanks for letting us take care of your tree work. Honest feedback of any kind is welcome.'
+  const text = `Thanks for letting us take care of your tree work. A Google review helps other homeowners around Plant City find us, and honest feedback of any kind is welcome. It takes about a minute.
 
-Thanks for having Dages Services out for the ${job}. If you have a minute, a Google review helps other neighbors find us:
+Leave a Google review:
+${reviewUrl}
 
-${WRITE_REVIEW_URL}
+If something wasn’t right, call us at (813) 716-9436 so we can try to fix it.
 
-— Joseph
-Dages Services, LLC`
-  const html = `<p>Hi ${escapeHtml(name)},</p>
-<p>Thanks for having Dages Services out for the ${escapeHtml(job)}. If you have a minute, a Google review helps other neighbors find us:</p>
-<p><a href="${WRITE_REVIEW_URL}">Leave a Google review</a></p>
-<p>— Joseph<br>Dages Services, LLC</p>`
+Joseph, Dages Services · (813) 716-9436 · dagesservices.com`
+  const html = `<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <title>${escapeHtml(subject)}</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    :root { color-scheme: light dark; supported-color-schemes: light dark; }
+    @media (prefers-color-scheme: dark) {
+      .bg-page { background-color: #111111 !important; }
+      .bg-card { background-color: #1c1c1c !important; }
+      .text-body { color: #f3f3f3 !important; }
+      .text-muted { color: #d0d0d0 !important; }
+      .text-link { color: #8fceaa !important; }
+    }
+  </style>
+</head>
+<body class="bg-page" style="margin:0;padding:0;background-color:#E8F2EC;font-family:${font};">
+  <div style="display:none;font-size:1px;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:yes;">
+    ${escapeHtml(preheader)}&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;
+  </div>
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="bg-page" style="background-color:#E8F2EC;">
+    <tr>
+      <td align="center" style="padding:24px 12px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="width:100%;max-width:600px;">
+          <tr>
+            <td bgcolor="#1F5133" style="background-color:#1F5133;padding:22px 28px;font-family:${font};font-size:20px;font-weight:700;line-height:1.3;color:#ffffff;">
+              Dages Services
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-card text-body" bgcolor="#ffffff" style="background-color:#ffffff;padding:32px 28px 16px;font-family:${font};font-size:16px;line-height:1.6;color:#1A1816;">
+              Thanks for letting us take care of your tree work. A Google review helps other homeowners around Plant City find us, and honest feedback of any kind is welcome. It takes about a minute.
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-card" bgcolor="#ffffff" align="center" style="background-color:#ffffff;padding:8px 28px 28px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" bgcolor="#1F5133" style="background-color:#1F5133;border-radius:8px;">
+                    <!--[if mso]>
+                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${reviewUrl}" style="height:48px;v-text-anchor:middle;width:260px;" arcsize="17%" stroke="f" fillcolor="#1F5133">
+                      <w:anchorlock/>
+                      <center style="color:#ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;">Leave a Google review</center>
+                    </v:roundrect>
+                    <![endif]-->
+                    <!--[if !mso]><!-->
+                    <a href="${reviewUrl}" style="display:inline-block;background-color:#1F5133;border-radius:8px;color:#ffffff;font-family:${font};font-size:16px;font-weight:700;line-height:48px;text-align:center;text-decoration:none;padding:0 28px;mso-hide:all;">Leave a Google review</a>
+                    <!--<![endif]-->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-card text-muted" bgcolor="#ffffff" style="background-color:#ffffff;padding:0 28px 28px;font-family:${font};font-size:15px;line-height:1.6;color:#4a4a4a;">
+              If something wasn’t right, call us at <a class="text-link" href="tel:+18137169436" style="color:#1F5133;text-decoration:underline;">(813) 716-9436</a> so we can try to fix it.
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-card text-muted" bgcolor="#ffffff" style="background-color:#ffffff;padding:0 28px 32px;font-family:${font};font-size:14px;line-height:1.6;color:#4a4a4a;">
+              Joseph, Dages Services · <a class="text-link" href="tel:+18137169436" style="color:#1F5133;text-decoration:underline;">(813) 716-9436</a> · <a class="text-link" href="https://dagesservices.com" style="color:#1F5133;text-decoration:underline;">dagesservices.com</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
   return { subject, text, html }
 }
+
+export { reviewCopy }
 
 function escapeHtml(value) {
   return String(value)
