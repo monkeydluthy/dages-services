@@ -39,6 +39,10 @@ export function serviceJsonLd(page) {
   }
 }
 
+function plainFaqText(text) {
+  return text.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+}
+
 export function pageFaqJsonLd(faqs) {
   return {
     '@context': 'https://schema.org',
@@ -48,7 +52,7 @@ export function pageFaqJsonLd(faqs) {
       name: item.question,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: item.answer,
+        text: plainFaqText(item.answer),
       },
     })),
   }

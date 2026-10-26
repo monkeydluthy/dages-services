@@ -31,42 +31,118 @@ export const servicePages = [
   {
     slug: 'tree-removal',
     jobType: 'Tree removal',
-    title: 'Tree Removal in Plant City & Tampa Bay | Dages Services',
+    title: 'Tree Removal in Plant City, FL | Dages Services',
     metaDescription:
-      'Full takedown of trees that are too close, damaged, or in the way. Family-run out of Plant City — same-business-day callback.',
+      'Tree removal in Plant City and Tampa Bay. Dead, leaning, or storm-damaged trees taken down and hauled away. Free estimates, same-business-day callback.',
     h1: 'Tree Removal in Plant City & Tampa Bay',
     intro:
-      'When a tree is too close to the house, split, or in the way, we take it down carefully and haul what we cut. Tell us the job and we follow up the same business day.',
+      "If a tree is too close to your house, dead, split, or just in the way, we take it down and haul away what we cut. Dages Services is a family-run tree service based in Plant City. Send the job details and we'll call back the same business day.",
     sections: [
       {
         heading: 'When a takedown is the right call',
-        body: 'Leaning, damaged, or crowding a roof or driveway — those are the trees we remove. If it can be saved with trimming, we say so.',
+        body: "Not every rough-looking tree has to come down, and we'll tell you if trimming will do the job. These are the signs that usually point to removal:",
+        bullets: [
+          'Large dead branches high in the canopy, or limbs that are already broken and hanging',
+          "A lean that's getting worse, or soil lifting on one side of the trunk",
+          'Mushrooms or fungus at the base, or open cavities in the trunk',
+          'Two trunks growing from one point in a tight V, with bark pinched between them, where the union can split',
+          'A thinning crown, or roots that are lifted, damaged, or circling the base',
+        ],
+        paragraphs: [
+          "One thing that trips people up in Florida: a tree with no leaves isn't always dead, because many local trees drop their leaves for part of the year. If you're not sure, send photos and we'll tell you what we see.",
+          'These warning signs follow the [UF/IFAS Extension guide, Is my tree safe? Recognizing Conditions that Increase the Likelihood of Tree Failure](https://ask.ifas.ufl.edu/publication/EP507).',
+        ],
       },
       {
-        heading: 'Tight access and hazards',
-        body: "If there isn't a safe way to drop it piece by piece, we bring in a crane. Hazardous work next to lines or structures is something we handle, not something we skip.",
+        heading: 'How a removal job goes',
+        steps: [
+          'You send the job details. We call back the same business day.',
+          "We look at the tree and what's around it: the house, fences, pool cage, power lines, and where the pieces can go. The estimate is free.",
+          "We take the tree down. Trees close to a house, fence, or power line come down in sections. When there's no safe way to do that, a crane lifts the pieces out.",
+          'We haul away what we cut.',
+          'If you want the stump gone too, we grind it below grade so the area is usable again. See [stump grinding](/services/stump-grinding).',
+        ],
+      },
+      {
+        heading: 'What affects the cost',
+        body: "We don't quote prices without seeing the job, because two trees that look alike can be very different jobs. What moves the number:",
+        bullets: [
+          'Size and height of the tree',
+          'How close it is to a house, fence, pool cage, or power lines',
+          'Whether equipment can get to it, or a crane is needed',
+          'The condition of the wood. Dead or brittle trees are harder and riskier to take down',
+          'How many trees, and how much there is to haul away',
+          'Whether you want the stump ground',
+        ],
+      },
+      {
+        heading: 'Tight access, power lines, and crane work',
+        body: "Some trees can't be climbed and dropped safely. They lean over a roof, sit in a fenced yard with no truck access, or stand next to power lines. For those jobs we use a crane to lift sections out. See [crane removal](/services/crane-removal) and [hazardous removal](/services/hazardous-removal).",
+        paragraphs: [
+          'If a tree or limb is touching a power line, stay clear, treat the line as live, and call your electric utility before anyone goes near it. Then call us.',
+        ],
+      },
+      {
+        type: 'gallery',
+        heading: 'Tree removal jobs',
+        body: 'Pine takedowns, dead palms, tight lots, and big trees that had to come down in sections. Here is some recent work.',
+      },
+      {
+        heading: 'After a storm',
+        body: 'If a tree has come down or a limb is hanging, choose "Emergency today" on the form and tell us what happened. Photos help us plan before we arrive, and you can add them right after you send the form. See [storm cleanup](/services/storm-cleanup).',
       },
     ],
     faqs: [
       {
         id: 'estimates',
         question: 'Do you offer free estimates?',
-        answer: "Yes. Tell us the job and we'll quote it. No charge to come look.",
+        answer: "Yes. There's no charge to come look at the job.",
+      },
+      {
+        id: 'callback',
+        question: 'How fast will someone call me back?',
+        answer: "The same business day. If it's an emergency, say so on the form.",
       },
       {
         id: 'haul',
         question: 'Do you haul the tree away?',
-        answer: "We haul what we cut. You're not left with a yard full of branches.",
+        answer: 'Yes. We haul away what we cut.',
       },
       {
         id: 'stump',
         question: 'Can you grind the stump too?',
-        answer: 'Yes. Stump grinding is on the list, and we grind below grade so the area is usable again.',
+        answer: 'Yes. We grind stumps below grade so the area is usable again.',
+      },
+      {
+        id: 'save',
+        question: 'Can my tree be saved instead?',
+        answer:
+          "Sometimes. If trimming can fix the problem, we'll tell you that instead of recommending a takedown.",
+      },
+      {
+        id: 'no-leaves',
+        question: 'Is a tree with no leaves dead?',
+        answer:
+          "Not always. Many Florida trees drop their leaves for part of the year. Look at the branches and send us photos if you're unsure.",
+      },
+      {
+        id: 'power-lines',
+        question: 'Do you work near power lines?',
+        answer:
+          'Yes, hazardous work is part of what we do. Keep clear of any line and call your utility if a line is touched or down.',
+      },
+      {
+        id: 'already-fell',
+        question: 'What if the tree already fell?',
+        answer:
+          'Choose "Emergency today" on the form and add photos. See [storm cleanup](/services/storm-cleanup).',
       },
     ],
     related: [
       { type: 'service', slug: 'stump-grinding' },
       { type: 'service', slug: 'hazardous-removal' },
+      { type: 'service', slug: 'crane-removal' },
+      { type: 'service', slug: 'storm-cleanup' },
       { type: 'area', slug: 'plant-city' },
     ],
   },

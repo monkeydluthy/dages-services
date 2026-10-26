@@ -7,7 +7,7 @@ const SELECT =
   'id, title, media_type, media_url, sort_order, created_at, width, height, poster_url, alt_text, job_type, city'
 const SELECT_BASIC = 'id, title, media_type, media_url, sort_order, created_at, job_type'
 
-function JobPhotoGallery({ jobType, city, heading = 'Recent work' }) {
+function JobPhotoGallery({ jobType, city, heading = 'Recent work', intro }) {
   const [items, setItems] = useState([])
   const [ready, setReady] = useState(false)
   const [viewerIndex, setViewerIndex] = useState(null)
@@ -78,6 +78,7 @@ function JobPhotoGallery({ jobType, city, heading = 'Recent work' }) {
       <section className="bg-white">
         <div className="mx-auto max-w-5xl px-4 py-12 sm:py-16">
           <h2 className="mb-3 text-2xl font-bold text-ink sm:text-3xl">{heading}</h2>
+          {intro ? <p className="mb-3 text-ink/70">{intro}</p> : null}
           <p className="text-sm text-ink/70">
             Photos from this kind of job will show up here as we add them.
           </p>
@@ -90,6 +91,7 @@ function JobPhotoGallery({ jobType, city, heading = 'Recent work' }) {
     <section className="bg-white">
       <div className="mx-auto max-w-5xl px-4 py-12 sm:py-16">
         <h2 className="mb-6 text-2xl font-bold text-ink sm:mb-8 sm:text-3xl">{heading}</h2>
+        {intro ? <p className="mb-6 text-ink/70">{intro}</p> : null}
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
           {items.map((item, index) => (
             <li key={item.id} className="overflow-hidden rounded-lg bg-brandTint">

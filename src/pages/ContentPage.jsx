@@ -14,6 +14,88 @@ import {
 import useNoIndex from '../hooks/useNoIndex'
 import { breadcrumbJsonLd, pageFaqJsonLd, serviceJsonLd } from '../lib/pageSchema'
 
+const linkClass = 'underline underline-offset-2 hover:text-ink'
+
+function RichText({ text }) {
+  const nodes = []
+  const pattern = /\[([^\]]+)\]\(([^)]+)\)/g
+  let lastIndex = 0
+  let match
+  let key = 0
+
+  while ((match = pattern.exec(text))) {
+    if (match.index > lastIndex) {
+      nodes.push(text.slice(lastIndex, match.index))
+    }
+
+    const label = match[1]
+    const href = match[2]
+    const isInternal = href.startsWith('/')
+
+    nodes.push(
+      isInternal ? (
+        <Link key={`${href}-${key}`} to={href} className={linkClass}>
+          {label}
+        </Link>
+      ) : (
+        <a
+          key={`${href}-${key}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkClass}
+        >
+          {label}
+        </a>
+      ),
+    )
+    key += 1
+    lastIndex = match.index + match[0].length
+  }
+
+  if (lastIndex < text.length) {
+    nodes.push(text.slice(lastIndex))
+  }
+
+  return nodes
+}
+
+function PageSection({ section }) {
+  return (
+    <section>
+      <h2 className="text-xl font-bold text-ink sm:text-2xl">{section.heading}</h2>
+      {section.body ? (
+        <p className="mt-2 text-ink/70">
+          <RichText text={section.body} />
+        </p>
+      ) : null}
+      {section.bullets?.length ? (
+        <ul className="mt-3 list-disc space-y-2 pl-5 text-ink/70">
+          {section.bullets.map((item) => (
+            <li key={item}>
+              <RichText text={item} />
+            </li>
+          ))}
+        </ul>
+      ) : null}
+      {section.steps?.length ? (
+        <ol className="mt-3 list-decimal space-y-2 pl-5 text-ink/70">
+          {section.steps.map((item) => (
+            <li key={item}>
+              <RichText text={item} />
+            </li>
+          ))}
+        </ol>
+      ) : null}
+      {section.paragraphs?.map((paragraph) => (
+        <p key={paragraph} className="mt-3 text-ink/70">
+          <RichText text={paragraph} />
+        </p>
+      ))}
+    </section>
+  )
+}
+
 function PageFaq({ items }) {
   if (!items?.length) return null
 
@@ -46,13 +128,54 @@ function PageFaq({ items }) {
                   />
                 </svg>
               </summary>
-              <p className="pb-4 text-sm text-ink/70">{item.answer}</p>
+              <p className="pb-4 text-sm text-ink/70">
+                <RichText text={item.answer} />
+              </p>
             </details>
           ))}
         </div>
       </div>
     </section>
   )
+}
+
+function renderPageSections(sections = [], { kind, page, galleryHeading }) {
+  const nodes = []
+  let textGroup = []
+
+  const flushText = () => {
+    if (textGroup.length === 0) return
+    nodes.push(
+      <div
+        key={textGroup[0].heading}
+        className="mx-auto grid max-w-5xl gap-8 px-4 pb-8 sm:pb-12"
+      >
+        {textGroup.map((section) => (
+          <PageSection key={section.heading} section={section} />
+        ))}
+      </div>,
+    )
+    textGroup = []
+  }
+
+  sections.forEach((section) => {
+    if (section.type === 'gallery') {
+      flushText()
+      nodes.push(
+        <JobPhotoGallery
+          key={section.heading || 'gallery'}
+          jobType={kind === 'service' ? page.jobType : undefined}
+          city={kind === 'area' ? page.city : undefined}
+          heading={section.heading || galleryHeading}
+          intro={section.body}
+        />,
+      )
+      return
+    }
+    textGroup.push(section)
+  })
+  flushText()
+  return nodes
 }
 
 function MissingPage() {
@@ -88,6 +211,7 @@ function ContentPage({ kind }) {
   const related = resolveRelated(page.related)
   const galleryHeading =
     kind === 'service' ? `${page.jobType} jobs` : `Jobs in ${page.city}`
+  const hasInlineGallery = page.sections?.some((section) => section.type === 'gallery')
 
   return (
     <main className="bg-brandTint">
@@ -127,21 +251,21 @@ function ContentPage({ kind }) {
       <section className="mx-auto max-w-5xl px-4 py-8 sm:py-12">
         <h1 className="text-3xl font-bold text-ink sm:text-4xl">{page.h1}</h1>
         <p className="mt-4 max-w-3xl text-base text-ink/80 sm:text-lg">{page.intro}</p>
-        <div className="mt-8 grid gap-8">
-          {page.sections?.map((section) => (
-            <section key={section.heading}>
-              <h2 className="text-xl font-bold text-ink sm:text-2xl">{section.heading}</h2>
-              <p className="mt-2 text-ink/70">{section.body}</p>
-            </section>
-          ))}
-        </div>
       </section>
 
-      <JobPhotoGallery
-        jobType={kind === 'service' ? page.jobType : undefined}
-        city={kind === 'area' ? page.city : undefined}
-        heading={galleryHeading}
-      />
+      {renderPageSections(page.sections, {
+        kind,
+        page,
+        galleryHeading,
+      })}
+
+      {hasInlineGallery ? null : (
+        <JobPhotoGallery
+          jobType={kind === 'service' ? page.jobType : undefined}
+          city={kind === 'area' ? page.city : undefined}
+          heading={galleryHeading}
+        />
+      )}
 
       <PageFaq items={page.faqs} />
 
