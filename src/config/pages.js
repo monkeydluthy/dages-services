@@ -34,7 +34,7 @@ const AREA_LASTMOD = '2026-11-12'
 export const servicePages = [
   {
     slug: 'tree-removal',
-    lastmod: '2026-10-07',
+    lastmod: '2026-10-26',
     jobType: 'Tree removal',
     title: 'Tree Removal in Plant City, FL | Dages Services',
     metaDescription:
@@ -192,7 +192,7 @@ export const servicePages = [
   },
   {
     slug: 'stump-grinding',
-    lastmod: '2026-10-07',
+    lastmod: '2026-11-12',
     jobType: 'Stump grinding',
     title: 'Stump Grinding in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -236,7 +236,7 @@ export const servicePages = [
   },
   {
     slug: 'deadwooding',
-    lastmod: '2026-11-12',
+    lastmod: '2026-10-26',
     jobType: 'Deadwooding',
     title: 'Deadwooding in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -275,7 +275,7 @@ export const servicePages = [
   },
   {
     slug: 'storm-cleanup',
-    lastmod: '2026-10-07',
+    lastmod: '2026-11-12',
     jobType: 'Storm cleanup',
     title: 'Storm Cleanup in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -359,7 +359,7 @@ export const servicePages = [
   },
   {
     slug: 'crane-removal',
-    lastmod: '2026-11-12',
+    lastmod: '2026-10-26',
     jobType: 'Crane removal',
     title: 'Crane Tree Removal in Plant City & Tampa Bay | Dages Services',
     metaDescription:
