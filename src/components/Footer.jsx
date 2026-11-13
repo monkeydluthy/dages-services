@@ -33,6 +33,20 @@ function Footer() {
             {siteConfig.phone}
           </a>
         </p>
+        <nav aria-label="Services" className="mt-6">
+          <ul className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-brandTint/80">
+            {siteConfig.services.map((service) => (
+              <li key={service.id}>
+                <a
+                  href={`/services/${service.id}`}
+                  className="underline underline-offset-2 hover:text-white"
+                >
+                  {service.name}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <p className="mt-6 text-sm text-brandTint/60">
           © 2026 {siteConfig.businessName}. All rights reserved.
         </p>

@@ -6,7 +6,7 @@ export const SITE_CANONICAL = 'https://dagesservices.com/'
 export const HOME_SEO = {
   title: 'Tree Removal & Storm Cleanup in Plant City, FL | Dages Services',
   description:
-    'Tree removal, trimming, stump grinding & storm cleanup in Plant City & Tampa Bay. Family-run, licensed. Call (813) 716-9436 — same business day callback.',
+    'Tree removal, trimming, stump grinding & storm cleanup in Plant City & Tampa Bay. Family-run, same business day callback. Call (813) 716-9436.',
   canonical: SITE_CANONICAL,
 }
 

@@ -151,7 +151,7 @@ export const servicePages = [
     jobType: 'Tree trimming',
     title: 'Tree Trimming in Plant City & Tampa Bay | Dages Services',
     metaDescription:
-      'Shape and thin trees so they stay healthy and clear of your house. Licensed and insured — based in Plant City.',
+      'Shape and thin trees so they stay healthy and clear of your house. Based in Plant City.',
     h1: 'Tree Trimming in Plant City & Tampa Bay',
     intro:
       'We shape and thin trees so they stay healthy and off the roof. Storm and hazardous jobs go first, but trimming happens year-round.',
@@ -232,7 +232,7 @@ export const servicePages = [
     jobType: 'Deadwooding',
     title: 'Deadwooding in Plant City & Tampa Bay | Dages Services',
     metaDescription:
-      'Cut out dead limbs before they fall and damage property. Licensed tree service based in Plant City.',
+      'Cut out dead limbs before they fall and damage property. Tree service based in Plant City.',
     h1: 'Deadwooding in Plant City & Tampa Bay',
     intro:
       'Dead limbs come out before they fall on a roof, a fence, or a car. If the rest of the tree needs a trim or a takedown, we tell you that up front.',
@@ -313,7 +313,7 @@ export const servicePages = [
     jobType: 'Hazardous removal',
     title: 'Hazardous Tree Removal in Plant City & Tampa Bay | Dages Services',
     metaDescription:
-      'Careful takedown of leaning, split, or near-power-line trees. Family-run, licensed, and insured out of Plant City.',
+      'Careful takedown of leaning, split, or near-power-line trees. Family-run, out of Plant City.',
     h1: 'Hazardous Tree Removal in Plant City & Tampa Bay',
     intro:
       'Leaning, split, or close to lines or the house — those are jobs we handle carefully, not jobs we avoid. Storm and hazardous work go first.',
@@ -342,6 +342,7 @@ export const servicePages = [
     ],
     related: [
       { type: 'service', slug: 'crane-removal' },
+      { type: 'service', slug: 'tree-removal' },
       { type: 'service', slug: 'storm-cleanup' },
       { type: 'area', slug: 'plant-city' },
     ],
@@ -458,7 +459,7 @@ export const areaPages = siteConfig.cities.map((city, index) => {
       },
       {
         heading: 'Same-business-day callback',
-        body: `Storm and hazardous jobs go first. For everything else in ${city}, we still follow up ${siteConfig.callbackPromise}. Licensed and insured — family-run out of Plant City.`,
+        body: `Storm and hazardous jobs go first. For everything else in ${city}, we still follow up ${siteConfig.callbackPromise}.`,
       },
     ],
     faqs: [
