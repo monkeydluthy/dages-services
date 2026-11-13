@@ -3,12 +3,11 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { getContentRoutes, SITE_ORIGIN } from '../src/config/pages.js'
 
-const lastmod = new Date().toISOString().slice(0, 10)
 const urls = getContentRoutes()
   .map(
     (route) => `  <url>
     <loc>${SITE_ORIGIN}${route.path === '/' ? '/' : route.path}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <lastmod>${route.lastmod}</lastmod>
     <changefreq>${route.changefreq}</changefreq>
     <priority>${route.priority}</priority>
   </url>`,

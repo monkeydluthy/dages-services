@@ -27,9 +27,14 @@ function formatList(items) {
 const countyList = formatList(siteConfig.counties)
 const cityList = formatList(siteConfig.cities)
 
+// lastmod = date of the last git commit that changed that page's content (see git log -L on its block).
+const HOME_LASTMOD = '2026-11-12'
+const AREA_LASTMOD = '2026-11-12'
+
 export const servicePages = [
   {
     slug: 'tree-removal',
+    lastmod: '2026-10-07',
     jobType: 'Tree removal',
     title: 'Tree Removal in Plant City, FL | Dages Services',
     metaDescription:
@@ -148,6 +153,7 @@ export const servicePages = [
   },
   {
     slug: 'tree-trimming',
+    lastmod: '2026-11-12',
     jobType: 'Tree trimming',
     title: 'Tree Trimming in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -186,6 +192,7 @@ export const servicePages = [
   },
   {
     slug: 'stump-grinding',
+    lastmod: '2026-10-07',
     jobType: 'Stump grinding',
     title: 'Stump Grinding in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -229,6 +236,7 @@ export const servicePages = [
   },
   {
     slug: 'deadwooding',
+    lastmod: '2026-11-12',
     jobType: 'Deadwooding',
     title: 'Deadwooding in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -267,6 +275,7 @@ export const servicePages = [
   },
   {
     slug: 'storm-cleanup',
+    lastmod: '2026-10-07',
     jobType: 'Storm cleanup',
     title: 'Storm Cleanup in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -310,6 +319,7 @@ export const servicePages = [
   },
   {
     slug: 'hazardous-removal',
+    lastmod: '2026-11-12',
     jobType: 'Hazardous removal',
     title: 'Hazardous Tree Removal in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -349,6 +359,7 @@ export const servicePages = [
   },
   {
     slug: 'crane-removal',
+    lastmod: '2026-11-12',
     jobType: 'Crane removal',
     title: 'Crane Tree Removal in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -387,6 +398,7 @@ export const servicePages = [
   },
   {
     slug: 'lot-clearing',
+    lastmod: '2026-10-07',
     jobType: 'Lot clearing',
     title: 'Lot Clearing in Plant City & Tampa Bay | Dages Services',
     metaDescription:
@@ -447,6 +459,7 @@ export const areaPages = siteConfig.cities.map((city, index) => {
 
   return {
     slug: cityToSlug(city),
+    lastmod: AREA_LASTMOD,
     city,
     title: `Tree Service in ${city}, FL | Dages Services`,
     metaDescription: `Tree removal, trimming, stump grinding, and storm work in ${city}. Family-run out of Plant City — same-business-day callback.`,
@@ -510,14 +523,16 @@ export function resolveRelated(related = []) {
 
 export function getContentRoutes() {
   return [
-    { path: '/', changefreq: 'weekly', priority: '1.0' },
+    { path: '/', lastmod: HOME_LASTMOD, changefreq: 'weekly', priority: '1.0' },
     ...servicePages.map((page) => ({
       path: servicePath(page.slug),
+      lastmod: page.lastmod,
       changefreq: 'monthly',
       priority: '0.8',
     })),
     ...areaPages.map((page) => ({
       path: areaPath(page.slug),
+      lastmod: page.lastmod,
       changefreq: 'monthly',
       priority: '0.7',
     })),
