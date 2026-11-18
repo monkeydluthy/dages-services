@@ -320,7 +320,7 @@ function AdminUpload({ onUploaded }) {
             onChange={(event) => setCity(event.target.value)}
             className={fieldClass}
           >
-            <option value="">None</option>
+            <option value="">No specific city</option>
             {siteConfig.cities.map((name) => (
               <option key={name} value={name}>
                 {name}
