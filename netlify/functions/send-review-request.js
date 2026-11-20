@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { json, sendResendEmail, webhookAuthorized } from '../lib/notify.js'
+import { isSpamRecord } from '../lib/leadSpam.js'
 
 const WRITE_REVIEW_URL =
   process.env.GOOGLE_WRITE_REVIEW_URL ||
@@ -186,6 +187,11 @@ export default async (request) => {
     ;({ lead, oldRecord } = await parseLead(request))
   } catch {
     return json(400, { error: 'Bad payload' })
+  }
+
+  if (isSpamRecord(lead) || isSpamRecord(oldRecord)) {
+    console.log('review-request skip: spam', lead.id)
+    return json(200, { ok: true, skipped: 'spam' })
   }
 
   if (!becameClosed(lead, oldRecord)) {

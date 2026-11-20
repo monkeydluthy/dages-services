@@ -111,6 +111,7 @@ function LeadsTable() {
   const [error, setError] = useState('')
   const [savingId, setSavingId] = useState('')
   const [viewer, setViewer] = useState(null)
+  const [tab, setTab] = useState('inbox')
 
   useEffect(() => {
     let cancelled = false
@@ -176,22 +177,56 @@ function LeadsTable() {
     }
   }
 
+  const inboxLeads = leads.filter((lead) => lead.status !== 'spam')
+  const filteredLeads = leads.filter((lead) => lead.status === 'spam')
+  const visibleLeads = tab === 'filtered' ? filteredLeads : inboxLeads
+  const tabs = [
+    { value: 'inbox', label: 'Inbox', count: inboxLeads.length },
+    { value: 'filtered', label: 'Filtered', count: filteredLeads.length },
+  ]
+
   return (
     <section className="rounded-lg border border-brand/20 bg-white p-6 shadow-sm">
       <h2 className="mb-1 text-xl font-bold text-ink">Leads</h2>
       <p className="mb-6 text-sm text-ink/70">
         Newest first. Emergency jobs are marked so they stand out.
       </p>
+      <div className="mb-4 flex gap-2" role="tablist" aria-label="Lead folders">
+        {tabs.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            role="tab"
+            aria-selected={tab === item.value}
+            onClick={() => setTab(item.value)}
+            className={`rounded-md border px-3 py-1.5 text-sm font-medium ${
+              tab === item.value
+                ? 'border-brand bg-brand text-brandTint'
+                : 'border-brand/30 bg-white text-ink hover:bg-brandTint'
+            }`}
+          >
+            {item.label} ({item.count})
+          </button>
+        ))}
+      </div>
+      {tab === 'filtered' ? (
+        <p className="mb-4 text-sm text-ink/70">
+          Caught by the spam filter. No email or push was sent for these. Use
+          &ldquo;Not spam&rdquo; to move a real lead back to the inbox as New.
+        </p>
+      ) : null}
       {loading ? <p className="text-sm text-ink/70">Loading…</p> : null}
       {error ? (
         <p className="mb-4 text-sm font-medium text-red-700" role="alert">
           {error}
         </p>
       ) : null}
-      {!loading && leads.length === 0 && !error ? (
-        <p className="text-sm text-ink/70">No leads yet.</p>
+      {!loading && visibleLeads.length === 0 && !error ? (
+        <p className="text-sm text-ink/70">
+          {tab === 'filtered' ? 'Nothing filtered.' : 'No leads yet.'}
+        </p>
       ) : null}
-      {leads.length > 0 ? (
+      {visibleLeads.length > 0 ? (
         <div className="overflow-x-auto">
           <table className="w-full min-w-[52rem] border-collapse text-left text-sm">
             <thead>
@@ -208,7 +243,7 @@ function LeadsTable() {
               </tr>
             </thead>
             <tbody>
-              {leads.map((lead) => (
+              {visibleLeads.map((lead) => (
                 <tr
                   key={lead.id}
                   id={`lead-${lead.id}`}
@@ -267,18 +302,29 @@ function LeadsTable() {
                     </div>
                   </td>
                   <td className="px-3 py-3">
-                    <select
-                      value={lead.status || 'new'}
-                      disabled={savingId === lead.id}
-                      onChange={(event) => handleStatusChange(lead, event.target.value)}
-                      className="rounded-md border border-brand/30 bg-white px-2 py-1.5 text-sm text-ink disabled:opacity-60"
-                    >
-                      {STATUSES.map((status) => (
-                        <option key={status.value} value={status.value}>
-                          {status.label}
-                        </option>
-                      ))}
-                    </select>
+                    {lead.status === 'spam' ? (
+                      <button
+                        type="button"
+                        disabled={savingId === lead.id}
+                        onClick={() => handleStatusChange(lead, 'new')}
+                        className="whitespace-nowrap rounded-md border border-brand/30 bg-white px-2 py-1.5 text-sm font-medium text-brand hover:bg-brandTint disabled:opacity-60"
+                      >
+                        Not spam
+                      </button>
+                    ) : (
+                      <select
+                        value={lead.status || 'new'}
+                        disabled={savingId === lead.id}
+                        onChange={(event) => handleStatusChange(lead, event.target.value)}
+                        className="rounded-md border border-brand/30 bg-white px-2 py-1.5 text-sm text-ink disabled:opacity-60"
+                      >
+                        {STATUSES.map((status) => (
+                          <option key={status.value} value={status.value}>
+                            {status.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
                   </td>
                 </tr>
               ))}
