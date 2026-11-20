@@ -1,9 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import siteConfig from '../config/siteConfig.json'
 import { buildLeadJobTypes, isValidJobType } from '../lib/jobTypes'
 import { getLeadAttribution } from '../lib/leadAttribution'
-import { publicSupabase } from '../lib/supabaseClient'
 
 const PHONE_PATTERN = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/
 const EMERGENCY_JOBS = new Set(['Storm cleanup', 'Hazardous removal'])
@@ -23,6 +22,12 @@ function LeadForm({ id = 'lead-form', plain = false, method = 'bottom' }) {
   const [notes, setNotes] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [contactPref, setContactPref] = useState('')
+  const renderedAt = useRef(null)
+
+  useEffect(() => {
+    renderedAt.current = Date.now()
+  }, [])
 
   async function handleSubmit(event) {
     event.preventDefault()
@@ -44,34 +49,48 @@ function LeadForm({ id = 'lead-form', plain = false, method = 'bottom' }) {
     const isEmergency =
       urgency === siteConfig.urgencyOptions[0] || EMERGENCY_JOBS.has(jobType)
 
-    const leadId = crypto.randomUUID()
-
     setSubmitting(true)
 
     const attribution = getLeadAttribution()
 
-    const { error: insertError } = await publicSupabase.from('leads').insert({
-      id: leadId,
-      name: name.trim(),
-      phone: phone.trim(),
-      email: email.trim(),
-      address: address.trim() || null,
-      job_type: jobType,
-      urgency,
-      notes: notes.trim() || null,
-      is_emergency: isEmergency,
-      source: 'landing_page',
-      utm_source: attribution.utm_source,
-      utm_medium: attribution.utm_medium,
-      utm_campaign: attribution.utm_campaign,
-      referrer: attribution.referrer,
-      landing_path: attribution.landing_path,
-    })
+    let result = null
+    try {
+      const response = await fetch('/.netlify/functions/submit-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          phone: phone.trim(),
+          email: email.trim(),
+          address: address.trim() || null,
+          job_type: jobType,
+          urgency,
+          notes: notes.trim() || null,
+          is_emergency: isEmergency,
+          contact_pref: contactPref,
+          elapsedMs:
+            renderedAt.current === null ? null : Date.now() - renderedAt.current,
+          utm_source: attribution.utm_source,
+          utm_medium: attribution.utm_medium,
+          utm_campaign: attribution.utm_campaign,
+          referrer: attribution.referrer,
+          landing_path: attribution.landing_path,
+        }),
+      })
+      result = response.ok ? await response.json() : null
+    } catch {
+      result = null
+    }
 
     setSubmitting(false)
 
-    if (insertError) {
+    if (!result?.ok) {
       setError('Something went wrong sending this. Please try again or call us.')
+      return
+    }
+
+    if (result.filtered) {
+      navigate('/thank-you')
       return
     }
 
@@ -81,7 +100,7 @@ function LeadForm({ id = 'lead-form', plain = false, method = 'bottom' }) {
       is_emergency: isEmergency,
     })
 
-    navigate(`/thank-you?lead_id=${leadId}`)
+    navigate(`/thank-you?lead_id=${result.lead_id}`)
   }
 
   return (
@@ -98,7 +117,30 @@ function LeadForm({ id = 'lead-form', plain = false, method = 'bottom' }) {
           No self-serve booking — tell us the job and how soon you need it. We'll
           follow up.
         </p>
-        <form className="grid gap-4" onSubmit={handleSubmit}>
+        <form className="relative grid gap-4" onSubmit={handleSubmit}>
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              left: '-10000px',
+              top: 'auto',
+              width: '1px',
+              height: '1px',
+              overflow: 'hidden',
+            }}
+          >
+            <label>
+              Contact preference
+              <input
+                type="text"
+                name="contact_pref"
+                tabIndex={-1}
+                autoComplete="off"
+                value={contactPref}
+                onChange={(event) => setContactPref(event.target.value)}
+              />
+            </label>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
               <span className="mb-1 block text-sm font-medium text-ink">Name</span>

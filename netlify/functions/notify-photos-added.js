@@ -6,6 +6,7 @@ import {
   photoNotifyAuthorized,
   webhookAuthorized,
 } from '../lib/notify.js'
+import { isSpamRecord } from '../lib/leadSpam.js'
 
 function photosBelongToLead(lead, urls) {
   if (!lead || !Array.isArray(urls) || urls.length === 0) return false
@@ -34,7 +35,7 @@ async function loadLead(leadId) {
 
   const { data, error } = await supabase
     .from('leads')
-    .select('id, name, job_type, phone, photo_urls')
+    .select('id, name, job_type, phone, photo_urls, status')
     .eq('id', leadId)
     .maybeSingle()
 
@@ -68,6 +69,11 @@ export default async (request) => {
 
   if (!allowed) {
     return json(401, { error: 'Unauthorized' })
+  }
+
+  if (isSpamRecord(lead)) {
+    console.log('notify-photos-added skip: spam', payload.lead_id)
+    return json(200, { ok: true, skipped: 'spam' })
   }
 
   const name = payload.name || lead?.name

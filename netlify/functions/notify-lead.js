@@ -4,6 +4,7 @@ import {
   notifyChannels,
   webhookAuthorized,
 } from '../lib/notify.js'
+import { isSpamRecord } from '../lib/leadSpam.js'
 
 async function parseLead(request) {
   const payload = await request.json()
@@ -30,6 +31,13 @@ export default async (request) => {
     lead = await parseLead(request)
   } catch {
     return json(400, { error: 'Bad payload' })
+  }
+
+  // Filtered leads are saved with status 'spam'. The database insert webhook
+  // still calls this function, so stop before any email or push.
+  if (isSpamRecord(lead)) {
+    console.log('notify-lead skip: spam', lead.id)
+    return json(200, { ok: true, skipped: 'spam' })
   }
 
   const subjectPrefix = lead.is_emergency ? '🚨 EMERGENCY LEAD' : 'New lead'
