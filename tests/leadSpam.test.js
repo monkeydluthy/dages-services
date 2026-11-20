@@ -48,14 +48,29 @@ test('every listed phrase is caught, whole-word and case-insensitive', () => {
   assert.ok(classifyLead({ ...normal, job_type: 'SEO' }).spam)
 })
 
+test('bare "marketing" is not listed, but marketing phrases still are', () => {
+  assert.equal(SPAM_PHRASES.includes('marketing'), false)
+  assert.equal(classifyLead({ ...normal, notes: 'marketing the house next month' }).spam, false)
+  assert.ok(
+    classifyLead({ ...normal, notes: 'We offer digital marketing services' }).reasons.includes(
+      'notes:phrase:digital marketing',
+    ),
+  )
+  assert.ok(classifyLead({ ...normal, notes: 'Social Media Marketing packages' }).spam)
+})
+
 test('substrings of listed words do not trigger (whole-word only)', () => {
-  for (const notes of ['Tree near the Seoul Ave mailbox', 'cryptomeria hedge needs trimming', 'supermarketing plaza lot']) {
+  for (const notes of ['Tree near the Seoul Ave mailbox', 'cryptomeria hedge needs trimming', 'supermarket plaza lot']) {
     assert.equal(classifyLead({ ...normal, notes }).spam, false, notes)
   }
 })
 
 test('a normal customer message passes', () => {
   assert.deepEqual(classifyLead(normal), { spam: false, reasons: [] })
+  assert.deepEqual(
+    classifyLead({ ...normal, notes: 'We are marketing the house next month, need the oak down first.' }),
+    { spam: false, reasons: [] },
+  )
   assert.equal(classifyLead({ ...normal, notes: null }).spam, false)
 })
 

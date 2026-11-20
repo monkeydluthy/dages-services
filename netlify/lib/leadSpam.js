@@ -14,7 +14,6 @@ export const SPAM_PHRASES = [
   'website design',
   'web development',
   'digital marketing',
-  'marketing',
   'lead generation',
   'social media marketing',
   'google ranking',
