@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import siteConfig from '../config/siteConfig.json'
+import { buildLeadJobTypes, isValidJobType } from '../lib/jobTypes'
 import { getLeadAttribution } from '../lib/leadAttribution'
 import { publicSupabase } from '../lib/supabaseClient'
 
 const PHONE_PATTERN = /^\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}$/
 const EMERGENCY_JOBS = new Set(['Storm cleanup', 'Hazardous removal'])
+const LEAD_JOB_TYPES = buildLeadJobTypes(siteConfig.services)
 
 const fieldClass =
   'w-full rounded-md border border-brand/30 px-3 py-2.5 text-base text-ink'
@@ -31,6 +33,11 @@ function LeadForm({ id = 'lead-form', plain = false, method = 'bottom' }) {
 
     if (!PHONE_PATTERN.test(phone.trim())) {
       setError('Enter a valid 10-digit phone number.')
+      return
+    }
+
+    if (!isValidJobType(jobType, LEAD_JOB_TYPES)) {
+      setError('Choose a job type from the list.')
       return
     }
 
@@ -157,9 +164,9 @@ function LeadForm({ id = 'lead-form', plain = false, method = 'bottom' }) {
               className={fieldClass}
             >
               <option value="">Select a service</option>
-              {siteConfig.services.map((service) => (
-                <option key={service.id} value={service.name}>
-                  {service.name}
+              {LEAD_JOB_TYPES.map((jobTypeOption) => (
+                <option key={jobTypeOption} value={jobTypeOption}>
+                  {jobTypeOption}
                 </option>
               ))}
             </select>
