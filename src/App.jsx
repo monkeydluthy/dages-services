@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import ChunkFallback from './components/ChunkFallback'
 import Header from './components/Header'
 import ProtectedRoute from './components/ProtectedRoute'
+import ScrollToTop from './components/ScrollToTop'
 import StickyCallButton from './components/StickyCallButton'
 import useNoIndex from './hooks/useNoIndex'
 import { captureLeadAttribution } from './lib/leadAttribution'
@@ -82,6 +83,7 @@ function AppShell() {
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <AppShell />
     </BrowserRouter>
   )

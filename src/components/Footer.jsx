@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import siteConfig from '../config/siteConfig.json'
 
 function formatList(items) {
@@ -37,12 +38,12 @@ function Footer() {
           <ul className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-brandTint/80">
             {siteConfig.services.map((service) => (
               <li key={service.id}>
-                <a
-                  href={`/services/${service.id}`}
+                <Link
+                  to={`/services/${service.id}`}
                   className="underline underline-offset-2 hover:text-white"
                 >
                   {service.name}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
