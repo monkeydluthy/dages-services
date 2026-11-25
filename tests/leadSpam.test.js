@@ -1,6 +1,6 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { classifyLead, SPAM_PHRASES, isSpamRecord } from '../netlify/lib/leadSpam.js'
+import { classifyLead, SPAM_PHRASES, SPAM_SENDERS, isSpamRecord } from '../netlify/lib/leadSpam.js'
 import { buildLeadRow } from '../netlify/lib/leadRow.js'
 
 const normal = {
@@ -100,4 +100,64 @@ test('isSpamRecord', () => {
   assert.equal(isSpamRecord({ status: 'spam' }), true)
   assert.equal(isSpamRecord({ status: 'new' }), false)
   assert.equal(isSpamRecord(null), false)
+})
+
+const pitch1 = {
+  ...normal,
+  email: 'matthew@automaxrevenue.com',
+  phone: '(813) 555-0199',
+  urgency: 'Emergency',
+  is_emergency: true,
+  notes: "Hi, it's Matthew again. Our 24/7 receptionist answers every call. Reply to matthew@automaxrevenue.com",
+}
+
+test('pitch with receptionist, email in notes and Emergency urgency is spam, never emergency', () => {
+  const r = classifyLead(pitch1)
+  assert.equal(r.spam, true)
+  for (const reason of ['sender', 'notes:email', 'notes:phrase:receptionist']) {
+    assert.ok(r.reasons.includes(reason), reason)
+  }
+  const { row } = buildLeadRow(pitch1)
+  assert.equal(row.status, 'spam')
+  assert.equal(row.is_emergency, false)
+})
+
+test('"checking in one more time ... video" pitch with an email in notes is spam', () => {
+  const r = classifyLead({
+    ...normal,
+    urgency: 'Emergency',
+    notes: 'Just checking in one more time. Want a 5-minute video? Write me at sales@some-agency.io',
+  })
+  assert.equal(r.spam, true)
+  assert.ok(r.reasons.includes('notes:email'))
+})
+
+test('magazine advertising pitch with a link is spam', () => {
+  const r = classifyLead({ ...normal, notes: 'Advertise in our local magazine, see https://mag.example/rates' })
+  assert.ok(r.reasons.includes('notes:url'))
+})
+
+test('blocklisted sender is spam even with an empty note', () => {
+  const r = classifyLead({ ...normal, email: 'vkdesignsandprints@gmail.com', notes: '' })
+  assert.deepEqual(r.reasons, ['sender'])
+  assert.ok(classifyLead({ ...normal, email: 'MATTHEW@AutomaxRevenue.com', notes: '' }).spam)
+  assert.ok(classifyLead({ ...normal, email: 'anyone@automaxrevenue.com', notes: '' }).spam)
+  assert.ok(classifyLead({ ...normal, phone: '(478) 606-2782', notes: '' }).spam)
+  assert.ok(classifyLead({ ...normal, phone: '863.346.3121', notes: '' }).spam)
+  assert.deepEqual(SPAM_SENDERS.phones, ['4786062782', '8633463121'])
+})
+
+test('new phrases are whole-word and "retainer" does not match "retaining"', () => {
+  assert.ok(classifyLead({ ...normal, notes: 'No Results, No Charge guarantee' }).spam)
+  assert.equal(classifyLead({ ...normal, notes: 'Need a retaining wall cleared of a stump' }).spam, false)
+})
+
+test('real customer messages pass', () => {
+  for (const notes of [
+    'Big oak leaning toward the garage, call me at 813-555-0142 after 5',
+    'Tree fell on the fence, need someone today',
+    'Looking at removing 3 pines next month',
+  ]) {
+    assert.deepEqual(classifyLead({ ...normal, notes }), { spam: false, reasons: [] }, notes)
+  }
 })
