@@ -28,7 +28,7 @@ const countyList = formatList(siteConfig.counties)
 const cityList = formatList(siteConfig.cities)
 
 // lastmod = date of the last git commit that changed that page's content (see git log -L on its block).
-const HOME_LASTMOD = '2026-11-12'
+const HOME_LASTMOD = '2026-11-25'
 const AREA_LASTMOD = '2026-11-12'
 
 export const servicePages = [
