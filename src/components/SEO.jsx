@@ -1,5 +1,7 @@
 import { useLayoutEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
+import overrides from '../../seo/titles.json'
+import { pathOfCanonical, titleOverride } from '../lib/titleOverrides'
 
 export const SITE_CANONICAL = 'https://dagesservices.com/'
 
@@ -44,10 +46,16 @@ function upsertMeta(attr, key, content) {
 }
 
 function SEO({
-  title = HOME_SEO.title,
-  description = HOME_SEO.description,
+  title: ownTitle = HOME_SEO.title,
+  description: ownDescription = HOME_SEO.description,
   canonical = SITE_CANONICAL,
 }) {
+  // The SEO pod's override (seo/titles.json) wins on indexable pages: the home page and any
+  // page that names its own canonical. The 404 passes neither, so it never picks one up.
+  const indexable = canonical !== SITE_CANONICAL || ownTitle === HOME_SEO.title
+  const override = indexable ? titleOverride(pathOfCanonical(canonical), overrides) : null
+  const title = override?.title ?? ownTitle
+  const description = override?.description ?? ownDescription
   const isHome = canonical === SITE_CANONICAL
   const ogTitle = isHome ? HOME_OG.title : title
   const ogDescription = isHome ? HOME_OG.description : description
