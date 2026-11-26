@@ -89,9 +89,17 @@ function Hero() {
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             {siteConfig.hero.headline}
           </h1>
-          <p className="text-base text-brandTint/80 sm:text-lg">
-            {siteConfig.hero.subheadline}
-          </p>
+          <div className="flex flex-col gap-2">
+            <p className="text-lg font-semibold leading-snug text-brandTint sm:text-xl">
+              {siteConfig.hero.tagline}
+            </p>
+            <p className="text-base text-brandTint/80 sm:text-lg">
+              {siteConfig.hero.subheadline.replace(
+                '{callbackPromise}',
+                siteConfig.callbackPromise,
+              )}
+            </p>
+          </div>
           <div>
             <a
               href={`tel:${siteConfig.phone}`}

@@ -11,7 +11,8 @@
   },
   "hero": {
     "headline": "Tree removal, trimming, and storm work — done right.",
-    "subheadline": "Tree removal, trimming, stump grinding, storm cleanup, and hazardous work — serving Plant City and the greater Tampa Bay area. Tell us the job and we'll follow up the same business day."
+    "tagline": "We remove the trees other tree services can't or won't — we specialize in hazardous tree removal.",
+    "subheadline": "Tree removal, trimming, stump grinding and storm cleanup in Plant City and the greater Tampa Bay area. Tell us the job and we'll follow up {callbackPromise}."
   },
   "callbackPromise": "the same business day",
   "callbackPromiseLabel": "Same-business-day callback",
