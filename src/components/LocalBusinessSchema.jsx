@@ -21,6 +21,7 @@ export function localBusinessJsonLd() {
     })),
     sameAs: [
       `https://www.google.com/maps/place/?q=place_id:${siteConfig.google.placeId}`,
+      ...siteConfig.socialLinks.map((link) => link.url),
     ],
   }
 }

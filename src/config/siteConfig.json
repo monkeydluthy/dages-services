@@ -102,6 +102,24 @@
     "writeReviewUrl": "https://search.google.com/local/writereview?placeid=ChIJRw7C8K0z3YgRnjTrItZ1M2g",
     "reviewsUrl": "https://search.google.com/local/reviews?placeid=ChIJRw7C8K0z3YgRnjTrItZ1M2g"
   },
+  "socialLinks": [
+    {
+      "name": "Facebook",
+      "url": "https://www.facebook.com/profile.php?id=61578886166323"
+    },
+    {
+      "name": "Instagram",
+      "url": "https://www.instagram.com/dagesservices/"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://www.youtube.com/@dagesservicesllc"
+    },
+    {
+      "name": "TikTok",
+      "url": "https://www.tiktok.com/@dagesservicesllc"
+    }
+  ],
   "financing": {
     "label": "Financing available through GreenSky",
     "placeholderLabel": "Financing available — ask about GreenSky",

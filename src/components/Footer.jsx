@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import siteConfig from '../config/siteConfig.json'
+import SocialIcon from './SocialIcon'
 
 function formatList(items) {
   if (items.length === 0) return ''
@@ -48,6 +49,21 @@ function Footer() {
             ))}
           </ul>
         </nav>
+        <ul className="mt-6 flex flex-wrap justify-center gap-2">
+          {siteConfig.socialLinks.map((link) => (
+            <li key={link.name}>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Dages Services on ${link.name}`}
+                className="flex h-11 w-11 items-center justify-center rounded-full hover:text-white"
+              >
+                <SocialIcon name={link.name} className="h-6 w-6" />
+              </a>
+            </li>
+          ))}
+        </ul>
         <p className="mt-6 text-sm text-brandTint/60">
           © 2026 {siteConfig.businessName}. All rights reserved.
         </p>
